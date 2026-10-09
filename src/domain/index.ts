@@ -7,6 +7,7 @@ export {
   moneySchema,
   paymentSchema,
   transferSchema,
+  userRoleSchema,
 } from "./schemas";
 export type {
   Account,
@@ -16,4 +17,5 @@ export type {
   Money,
   Payment,
   Transfer,
+  UserRole,
 } from "./schemas";

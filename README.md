@@ -4,7 +4,7 @@ Harness de agentes para un **core bancario** (usuarios, cuentas, tarjetas, trans
 
 Esta versión autentica y navega. No mueve dinero. Cada capacidad de negocio entra con una spec.
 
-Stack: **Next.js** (App Router), **Bun**, **TypeScript**, **MongoDB Atlas**. Sesión JWT. Un rol `user`.
+Stack: **Next.js** (App Router), **Bun**, **TypeScript**, **MongoDB Atlas**. Sesión JWT. Roles `administrador` y `cuentahabiente`.
 
 ## Constitución y SDD
 
@@ -30,7 +30,14 @@ cp .env.example .env.local
 openssl rand -base64 32
 ```
 
-Si `users` está vacía, se crea el usuario `AUTH_SEED_USERNAME` / `AUTH_SEED_PASSWORD`.
+Al conectar, `AUTH_SEED_USERNAME` (por defecto `praxis`) queda como administrador. Si faltan, se crean los cuentahabientes `sofia`, `diego` y `valeria` con `AUTH_SEED_PASSWORD`. Si `praxis` ya existía, conserva su contraseña. Una sesión antigua con rol `user` deja de valer.
+
+| Usuario | Rol | Ve |
+| --- | --- | --- |
+| `praxis` | administrador | Inicio (paneles) y Configuración |
+| `sofia`, `diego`, `valeria` | cuentahabiente | Inicio, Cuentas, Tarjetas, Transferencias y Pagos |
+
+Cada build es una release. En Configuración el administrador fija el porcentaje, escalones por fecha y cuentahabientes concretos. Quien es candidato puede cargar esa versión al momento o en el siguiente refresh.
 
 ```bash
 bun install

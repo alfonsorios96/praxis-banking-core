@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { canAccessPath } from "@/auth/access";
 import { SESSION_COOKIE, isPublicPath } from "@/auth/constants";
 import { decryptSession } from "@/auth/token";
 
@@ -17,6 +18,10 @@ export async function proxy(request: NextRequest) {
   }
 
   if (session && pathname === "/login") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if (session && !isPublicPath(pathname) && !canAccessPath(session.role, pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 

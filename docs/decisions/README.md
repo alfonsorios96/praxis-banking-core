@@ -19,3 +19,5 @@ Las decisiones aquí son **parte de la constitución** una vez ratificadas. Form
 | 0004 | Aceptada | MongoDB Atlas y autenticación |
 | 0005 | Aceptada | Dinero en centavos, ledger y confirmación |
 | 0006 | Aceptada | PWA mobile-first |
+| 0007 | Aceptada | Roles administrador y cuentahabiente |
+| 0008 | Aceptada | Liberación gradual de una sola versión |

@@ -2,13 +2,14 @@ import "server-only";
 
 import { cookies } from "next/headers";
 import { cache } from "react";
-import { SESSION_COOKIE, USER_ROLE } from "./constants";
+import type { UserRole } from "@/domain/schemas";
+import { SESSION_COOKIE } from "./constants";
 import { decryptSession } from "./token";
 
 export type VerifiedSession = {
   userId: string;
   username: string;
-  role: typeof USER_ROLE;
+  role: UserRole;
 };
 
 export const verifySession = cache(async (): Promise<VerifiedSession | null> => {
@@ -23,6 +24,6 @@ export const verifySession = cache(async (): Promise<VerifiedSession | null> => 
   return {
     userId: payload.userId,
     username: payload.username,
-    role: USER_ROLE,
+    role: payload.role,
   };
 });

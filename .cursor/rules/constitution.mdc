@@ -9,7 +9,7 @@ Lee y obedece `docs/constitution.md`. Precedencia: constitución → `docs/decis
 
 Misión: automatizar y ayudar un core bancario (usuarios, cuentas, tarjetas, transferencias, pagos).
 
-Stack: Next.js, Bun, TypeScript, MongoDB Atlas, sesión JWT, un solo rol `user`, PWA mobile-first.
+Stack: Next.js, Bun, TypeScript, MongoDB Atlas, sesión JWT, roles `administrador` y `cuentahabiente`, PWA mobile-first.
 
 Dinero en centavos enteros (MXN). Solo el agente ledger muta asientos. Los agentes proponen; un efecto sobre saldo exige confirmación explícita del titular.
 

@@ -4,7 +4,11 @@ Términos del core. Los esquemas de frontera viven en `src/domain`. Las coleccio
 
 | Término | Significado |
 | --- | --- |
-| Usuario | Cuenta de acceso con rol único `user`. Entra con usuario y contraseña. No es todavía un titular con cuentas. |
+| Usuario | Cuenta de acceso con rol `administrador` o `cuentahabiente`. Entra con usuario y contraseña. El cuentahabiente aún no es un titular con cuentas de depósito. |
+| Administrador | Rol que ve los paneles de inicio y configura el nombre visible y la release. No opera cuentas ni instrumentos. Siempre es candidato a la release actual. |
+| Release | Build único de Next.js, servidor y cliente juntos. No hay dos procesos históricos a la vez. |
+| Candidato | Quien puede tomar la release actual: todo administrador, un cuentahabiente de la lista, o uno cuyo cubo cae en el porcentaje vigente. |
+| Cuentahabiente | Rol que navega inicio, cuentas, tarjetas, transferencias y pagos. Esas pantallas de producto siguen en espera de spec. |
 | Sesión | JWT en cookie HttpOnly que acredita al usuario autenticado. |
 | Cuenta | Relación del titular con el banco. Tiene estado `open`, `frozen` o `closed` y moneda `MXN`. No guarda el saldo. |
 | Saldo | Suma de los asientos del ledger sobre una cuenta. No es un campo que se edite. |

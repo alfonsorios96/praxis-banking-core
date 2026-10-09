@@ -1,7 +1,8 @@
 # Constitución de Praxis
 
-**Versión:** 1.0.0  
+**Versión:** 2.1.0  
 **Ratificada:** 2026-10-09  
+**Enmendada:** 2026-10-09 ([ADR 0008](./decisions/0008-liberacion-gradual.md))  
 **Alcance:** Toda decisión, especificación, agente y línea de código de este repositorio.
 
 Esta constitución es la norma de mayor rango del proyecto. Ninguna especificación, ADR, prompt de agente ni implementación puede contradecirla. Si hay conflicto, se corrige el artefacto inferior o se enmienda esta constitución mediante una decisión ratificada en `docs/decisions/`.
@@ -67,13 +68,20 @@ Detalle: [ADR 0001](./decisions/0001-stack-tecnologico.md), [ADR 0004](./decisio
 
 ### 2.7 Acceso autenticado
 
-La aplicación exige identidad. Un único rol (`user`). Autenticación por **usuario y contraseña**. No hay registro público ni roles adicionales sin enmienda.
+La aplicación exige identidad. Hay dos roles, y ningún otro sin enmienda:
 
-Rutas de producto y APIs de negocio son privadas. Quedan públicas `/login`, el health check y los assets de instalación de la PWA (`/manifest.webmanifest`, `/sw.js` y los iconos). Las acciones con efecto sobre saldo siguen requiriendo confirmación del titular (§2.4) **además** de la sesión.
+- `administrador` — Inicio (paneles de la plataforma) y Configuración. No entra a cuentas, tarjetas, transferencias ni pagos.
+- `cuentahabiente` — Inicio, Cuentas, Tarjetas, Transferencias y Pagos. No entra a Configuración.
+
+Autenticación por **usuario y contraseña**. No hay registro público.
+
+Rutas de producto y APIs de negocio son privadas. Quedan públicas `/login`, el health check y los assets de instalación de la PWA (`/manifest.webmanifest`, `/sw.js` y los iconos). Una ruta ajena al rol redirige a Inicio. Las acciones con efecto sobre saldo siguen requiriendo confirmación del titular (§2.4) **además** de la sesión. Un rol no sustituye esa confirmación.
 
 ### 2.8 Interfaz mobile-first
 
 La interfaz se diseña para el teléfono y se instala como PWA. En escritorio se presenta como una columna de teléfono. Objetivos táctiles grandes, barra de navegación inferior y respeto a las áreas seguras. Ver [ADR 0006](./decisions/0006-pwa-mobile-first.md).
+
+Una release es el build de Next.js, servidor y cliente juntos. No se ejecutan dos builds históricos en paralelo. El administrador la abre desde Configuración por porcentaje, por fecha o por cuentahabiente concreto. El administrador siempre es candidato. El service worker no activa un precache nuevo hasta que la persona carga esa release: puede hacerlo al ver el aviso o en el siguiente refresh si lo pospuso. Quien no es candidato conserva el cliente anterior. Ver [ADR 0008](./decisions/0008-liberacion-gradual.md).
 
 ---
 
@@ -84,7 +92,7 @@ Todo agente declara: misión, entradas, salidas, herramientas permitidas y lo qu
 | Agente | Misión |
 | --- | --- |
 | Orquestador | Descompone la petición, asigna sub-agentes, consolida el resultado y pide confirmación del titular cuando la meta afecte un saldo. |
-| Identidad | Usuarios, credenciales y perfil. No abre cuentas ni mueve dinero. |
+| Identidad | Usuarios, credenciales, perfil y los roles administrador y cuentahabiente. No abre cuentas ni mueve dinero. |
 | Cuentas | Cuentas, titularidad y estado (abierta, congelada, cerrada). No muta saldos. |
 | Tarjetas | Plástico, estado y límites. No autoriza cargos. |
 | Transferencias | Propone traspasos entre cuentas. No escribe asientos. |
@@ -132,3 +140,5 @@ Sin ADR, no hay enmienda.
 | [0004](./decisions/0004-mongodb-y-autenticacion.md) | MongoDB Atlas y autenticación |
 | [0005](./decisions/0005-dinero-y-confirmacion.md) | Dinero en centavos, ledger y confirmación |
 | [0006](./decisions/0006-pwa-mobile-first.md) | PWA mobile-first |
+| [0007](./decisions/0007-roles-administrador-y-cuentahabiente.md) | Roles administrador y cuentahabiente |
+| [0008](./decisions/0008-liberacion-gradual.md) | Liberación gradual de una sola versión |

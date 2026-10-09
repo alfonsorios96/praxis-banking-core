@@ -4,6 +4,8 @@
 - **Fecha:** 2026-10-09
 - **Artículo constitucional:** §2.6, §2.7
 
+> El rol único `user` quedó sustituido por el [ADR 0007](./0007-roles-administrador-y-cuentahabiente.md). El resto de esta decisión sigue vigente.
+
 ## Contexto
 
 El shell necesita identidad antes de que existan cuentas o movimientos. La persistencia elegida para el proyecto es MongoDB Atlas, alineada con el harness de referencia.

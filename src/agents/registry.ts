@@ -3,7 +3,8 @@ import type { AgentName } from "./types";
 export const AGENT_MISSIONS: Record<AgentName, string> = {
   orchestrator:
     "Descomponer peticiones, asignar sub-agentes y consolidar un resultado trazable. Pedir confirmación del titular si la meta afecta un saldo.",
-  identity: "Usuarios, credenciales y perfil. No abre cuentas ni mueve dinero.",
+  identity:
+    "Usuarios, credenciales, perfil y roles (administrador, cuentahabiente). No abre cuentas ni mueve dinero.",
   accounts:
     "Cuentas, titularidad y estado. No muta saldos.",
   cards: "Plástico, estado y límites. No autoriza cargos.",

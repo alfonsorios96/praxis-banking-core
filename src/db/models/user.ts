@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { USER_ROLE } from "@/auth/constants";
+import { USER_ROLES, type UserRole } from "@/domain/schemas";
 import { COLLECTIONS } from "../collections";
 import { defineModel } from "./define-model";
 
@@ -7,7 +7,7 @@ export type UserRecord = {
   username: string;
   fullName: string;
   passwordHash: string;
-  role: typeof USER_ROLE;
+  role: UserRole;
 };
 
 const userSchema = new Schema(
@@ -34,8 +34,7 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: [USER_ROLE],
-      default: USER_ROLE,
+      enum: [...USER_ROLES],
       required: true,
     },
   },

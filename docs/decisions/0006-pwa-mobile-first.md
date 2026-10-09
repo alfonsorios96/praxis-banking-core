@@ -15,6 +15,8 @@ La aplicación es web, y el uso principal es el teléfono. Debe poder instalarse
 - Objetivos táctiles de al menos 44px. `viewport-fit=cover`.
 - Manifest (`src/app/manifest.ts`), iconos en `public/icons/` e `src/app/icon.png`.
 - Service worker con **Serwist** en modo configurador (`serwist.config.js`, `src/sw.ts` → `public/sw.js`), compatible con el build Turbopack de Next.js 16. `bun run build` ejecuta `next build` y después `serwist build`, que precachea el shell. En `next dev` el provider no registra el worker. En `next start` sí.
+
+> La activación inmediata del worker quedó sustituida por el [ADR 0008](./0008-liberacion-gradual.md). El precache nuevo espera a que el rollout incluya al usuario.
 - `display: standalone`. Tema `#1f4f46`.
 
 ## Consecuencias

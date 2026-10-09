@@ -1,10 +1,10 @@
 import { jwtVerify, SignJWT } from "jose";
-import { USER_ROLE } from "./constants";
+import { userRoleSchema, type UserRole } from "@/domain/schemas";
 
 export type SessionPayload = {
   userId: string;
   username: string;
-  role: typeof USER_ROLE;
+  role: UserRole;
   expiresAt: string;
 };
 
@@ -41,17 +41,18 @@ export async function decryptSession(
     const { payload } = await jwtVerify(session, secret, {
       algorithms: ["HS256"],
     });
+    const role = userRoleSchema.safeParse(payload.role);
     if (
       typeof payload.userId !== "string" ||
       typeof payload.username !== "string" ||
-      payload.role !== USER_ROLE
+      !role.success
     ) {
       return null;
     }
     return {
       userId: payload.userId,
       username: payload.username,
-      role: USER_ROLE,
+      role: role.data,
       expiresAt: String(payload.expiresAt ?? ""),
     };
   } catch {

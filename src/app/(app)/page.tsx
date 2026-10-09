@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { AGENT_MISSIONS, SUBAGENTS } from "@/agents";
+import { ROLE_ADMINISTRADOR } from "@/auth/constants";
 import { verifySession } from "@/auth/dal";
+import { AdminHome } from "./admin-home";
 
 export const metadata: Metadata = {
   title: "Inicio",
@@ -8,6 +11,13 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const session = await verifySession();
+  if (!session) {
+    redirect("/login");
+  }
+
+  if (session.role === ROLE_ADMINISTRADOR) {
+    return <AdminHome />;
+  }
 
   return (
     <section className="flex flex-col gap-6">
@@ -16,7 +26,7 @@ export default async function HomePage() {
           Core bancario
         </p>
         <h1 className="font-display text-4xl tracking-tight text-ink">
-          Hola, {session?.username}
+          Hola, {session.username}
         </h1>
         <p className="text-base leading-7 text-muted">
           El shell está listo. Cuentas, tarjetas, transferencias y pagos esperan

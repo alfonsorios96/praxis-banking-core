@@ -9,7 +9,11 @@ export const moneySchema = z.object({
 
 export type Money = z.infer<typeof moneySchema>;
 
-export const userRoleSchema = z.literal("user");
+export const USER_ROLES = ["administrador", "cuentahabiente"] as const;
+
+export const userRoleSchema = z.enum(USER_ROLES);
+
+export type UserRole = (typeof USER_ROLES)[number];
 
 export const identitySchema = z.object({
   id: z.string().min(1),

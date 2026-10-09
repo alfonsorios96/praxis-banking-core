@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { ensureCurrentRelease } from "@/releases/store";
 import { DB_NAME } from "./collections";
-import { seedDefaultUser } from "./seed";
+import { seedAccess } from "./seed";
 
 type MongooseCache = {
   conn: typeof mongoose | null;
@@ -18,6 +19,18 @@ function cache(): MongooseCache {
   return globalForMongoose.mongooseCache;
 }
 
+let seedPromise: Promise<void> | null = null;
+
+function ensureSeed(): Promise<void> {
+  if (!seedPromise) {
+    seedPromise = seedAccess().catch((error: unknown) => {
+      seedPromise = null;
+      throw error;
+    });
+  }
+  return seedPromise;
+}
+
 export async function connectDb(): Promise<typeof mongoose> {
   const uri = process.env.MONGODB_URI;
   if (!uri) {
@@ -25,24 +38,18 @@ export async function connectDb(): Promise<typeof mongoose> {
   }
 
   const stored = cache();
-  if (stored.conn) {
-    return stored.conn;
-  }
-
-  if (!stored.promise) {
-    stored.promise = mongoose
-      .connect(uri, { dbName: DB_NAME })
-      .then(async (connection) => {
-        await seedDefaultUser();
-        return connection;
-      })
-      .catch((error: unknown) => {
+  if (!stored.conn) {
+    if (!stored.promise) {
+      stored.promise = mongoose.connect(uri, { dbName: DB_NAME }).catch((error: unknown) => {
         stored.promise = null;
         stored.conn = null;
         throw error;
       });
+    }
+    stored.conn = await stored.promise;
   }
 
-  stored.conn = await stored.promise;
+  await ensureSeed();
+  await ensureCurrentRelease();
   return stored.conn;
 }

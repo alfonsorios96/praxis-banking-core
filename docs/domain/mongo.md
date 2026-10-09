@@ -9,10 +9,33 @@ Base: `MONGODB_DB` o `praxis`. Conexión: `MONGODB_URI`.
 | username | string | Único, minúsculas, 2–64. |
 | fullName | string | Opcional, hasta 120. Vacío si no hay nombre. |
 | passwordHash | string | bcrypt. No se selecciona por defecto. |
-| role | `"user"` | Único valor admitido. |
+| role | `"administrador"` \| `"cuentahabiente"` | Obligatorio. El valor `user` ya no es válido. |
 | createdAt / updatedAt | date | `timestamps` de Mongoose. |
 
 Índice único en `username`.
+
+## `platform_settings` (implementada)
+
+Un documento. Lo escribe identidad. No guarda dinero.
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| key | string | Único. Valor `default`. |
+| displayName | string | 2–40. Nombre visible en la cabecera autenticada. |
+| createdAt / updatedAt | date | `timestamps` de Mongoose. |
+
+## `releases` (implementada)
+
+Una fila por build de Next.js. La escribe la configuración. No guarda dinero. El build nuevo nace con porcentaje 0.
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| buildId | string | Único. Id del build. |
+| label | string | Hasta 80. Al nacer, igual que `buildId`. |
+| percent | number | Entero 0–100. Suelo manual. |
+| allowUserIds | string[] | Ids de cuentahabientes, además del porcentaje. |
+| steps | `{ at, percent }[]` | Escalón. Cuenta cuando `at` ya pasó. |
+| createdAt / updatedAt | date | `timestamps` de Mongoose. |
 
 ## Colecciones futuras
 
