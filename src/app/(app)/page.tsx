@@ -29,8 +29,8 @@ export default async function HomePage() {
           Hola, {session.username}
         </h1>
         <p className="text-base leading-7 text-muted">
-          El shell está listo. Cuentas, tarjetas, transferencias y pagos esperan
-          su spec. Nada de esto mueve dinero todavía.
+          Tienes una corriente y una de ahorro, cada una con su IBAN. Una transferencia
+          interna mueve euros cuando la confirmas. Tarjetas y pagos siguen en espera.
         </p>
       </div>
       <ul className="flex flex-col gap-3">

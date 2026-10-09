@@ -1,8 +1,8 @@
 # Constitución de Praxis
 
-**Versión:** 2.1.0  
+**Versión:** 2.3.0  
 **Ratificada:** 2026-10-09  
-**Enmendada:** 2026-10-09 ([ADR 0008](./decisions/0008-liberacion-gradual.md))  
+**Enmendada:** 2026-10-09 ([ADR 0010](./decisions/0010-iban-y-euro.md))  
 **Alcance:** Toda decisión, especificación, agente y línea de código de este repositorio.
 
 Esta constitución es la norma de mayor rango del proyecto. Ninguna especificación, ADR, prompt de agente ni implementación puede contradecirla. Si hay conflicto, se corrige el artefacto inferior o se enmienda esta constitución mediante una decisión ratificada en `docs/decisions/`.
@@ -15,7 +15,7 @@ Praxis es un harness de agentes cuya misión es **automatizar y ayudar las opera
 
 Los agentes no sustituyen al titular ni al control del banco: **proponen, estructuran, contrastan y documentan**. Cualquier efecto sobre un saldo exige confirmación explícita del titular. Toda cifra de dinero debe ser trazable hasta un asiento.
 
-El shell de esta versión autentica y navega. No abre cuentas, no emite tarjetas y no mueve dinero. Esas capacidades nacen cada una con su spec.
+Esta versión autentica, navega y abre para cada cuentahabiente una cuenta corriente y una de ahorro, cada una con su IBAN en euros. Un traspaso interno mueve dinero solo después de la confirmación del titular, mediante un asiento del ledger. No emite tarjetas ni pagos.
 
 ---
 
@@ -36,7 +36,7 @@ Orden de precedencia:
 
 ### 2.3 Dinero entero y ledger único
 
-Los importes se representan en **enteros de la unidad menor** (centavos). La moneda de arranque es **MXN**. Queda prohibido usar `number` de punto flotante para dinero.
+Los importes se representan en **enteros de la unidad menor** (céntimos). La moneda es **EUR**. Queda prohibido usar `number` de punto flotante para dinero.
 
 El saldo de una cuenta no es un campo editable. Solo el agente **ledger** puede registrar asientos, y el saldo se deriva de ellos. Un movimiento que afecte saldo es idempotente: la misma clave de idempotencia no produce un segundo asiento.
 
@@ -142,3 +142,5 @@ Sin ADR, no hay enmienda.
 | [0006](./decisions/0006-pwa-mobile-first.md) | PWA mobile-first |
 | [0007](./decisions/0007-roles-administrador-y-cuentahabiente.md) | Roles administrador y cuentahabiente |
 | [0008](./decisions/0008-liberacion-gradual.md) | Liberación gradual de una sola versión |
+| [0009](./decisions/0009-cuentas-y-transferencias-internas.md) | Cuentas y transferencias internas |
+| [0010](./decisions/0010-iban-y-euro.md) | IBAN español y euro |

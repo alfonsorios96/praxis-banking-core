@@ -12,7 +12,7 @@ export function postingsAreBalanced(postings: LedgerEntry["postings"]): boolean 
     if (!Number.isInteger(posting.money.amountMinor)) {
       return false;
     }
-    if (posting.money.currency !== "MXN") {
+    if (posting.money.currency !== "EUR") {
       return false;
     }
     if (posting.side === "debit") {

@@ -2,7 +2,7 @@
 
 Harness de agentes para un **core bancario** (usuarios, cuentas, tarjetas, transferencias y pagos). La interfaz es web, mobile-first, e instalable como PWA.
 
-Esta versión autentica y navega. No mueve dinero. Cada capacidad de negocio entra con una spec.
+Esta versión autentica, navega y mueve dinero solo en traspasos internos confirmados. Tarjetas y pagos siguen en espera.
 
 Stack: **Next.js** (App Router), **Bun**, **TypeScript**, **MongoDB Atlas**. Sesión JWT. Roles `administrador` y `cuentahabiente`.
 
@@ -37,6 +37,8 @@ Al conectar, `AUTH_SEED_USERNAME` (por defecto `praxis`) queda como administrado
 | `praxis` | administrador | Inicio (paneles) y Configuración |
 | `sofia`, `diego`, `valeria` | cuentahabiente | Inicio, Cuentas, Tarjetas, Transferencias y Pagos |
 
+Cada cuentahabiente nace con Ahorro (5.000,00 €) y Corriente (10.000,00 €). Cada cuenta tiene un IBAN español. El saldo sale del ledger. Puede transferir a la corriente de otro cuentahabiente: elige su IBAN de origen, el importe y confirma. El administrador no tiene cuentas.
+
 Cada build es una release. En Configuración el administrador fija el porcentaje, escalones por fecha y cuentahabientes concretos. Quien es candidato puede cargar esa versión al momento o en el siguiente refresh.
 
 ```bash
@@ -61,9 +63,12 @@ bun run build
 ```
 src/app          rutas Next.js (`login` pública, `(app)` autenticada)
 src/auth         sesión JWT y login
-src/db           Mongoose, modelo users, seed
+src/db           Mongoose, usuarios, cuentas, transferencias, asientos
+src/ledger       única escritura de asientos
+src/accounts     alta de Ahorro, Corriente e IBAN
+src/transfers    traspaso interno confirmado
 src/proxy.ts     redirección si no hay sesión
 src/agents       orquestador y misiones de sub-agentes
-src/domain       esquemas Zod y balance de asientos
+src/domain       esquemas Zod, céntimos, IBAN y balance de asientos
 src/sw.ts        service worker (Serwist)
 ```

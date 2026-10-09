@@ -9,7 +9,7 @@ export const AGENT_MISSIONS: Record<AgentName, string> = {
     "Cuentas, titularidad y estado. No muta saldos.",
   cards: "Plástico, estado y límites. No autoriza cargos.",
   transfers:
-    "Proponer traspasos entre cuentas. No escribe asientos.",
+    "Traspasos internos entre cuentahabientes. El asiento lo escribe el ledger, después de la confirmación del titular.",
   payments:
     "Proponer pagos a un comercio o servicio. No escribe asientos.",
   ledger:

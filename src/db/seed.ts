@@ -1,6 +1,7 @@
 import { ROLE_ADMINISTRADOR, ROLE_CUENTAHABIENTE } from "@/auth/constants";
 import { hashPassword } from "@/auth/password";
 import type { UserRole } from "@/domain/schemas";
+import { isDuplicateKey } from "./duplicate";
 import { ensurePlatformSettings } from "./models/platform-settings";
 import { User } from "./models/user";
 import { SEED_ACCOUNT_HOLDERS, SEED_ADMIN_USERNAME } from "./seed-roster";
@@ -88,13 +89,4 @@ async function ensureUser(input: {
     existing.role = input.role;
     await existing.save();
   }
-}
-
-function isDuplicateKey(error: unknown): boolean {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    error.code === 11000
-  );
 }

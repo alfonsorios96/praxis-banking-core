@@ -13,7 +13,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 1. Lee `docs/constitution.md` y `docs/decisions/` antes de cambiar comportamiento.
 2. Tareas guiadas por IA: crea `current/<id>/` (`bun run sdd:new -- --id <id>`) y completa spec, plan y tasks antes de implementar en `src/`.
 3. Dominio: core bancario. Sub-agentes: identity, accounts, cards, transfers, payments, ledger. El orquestador es el único que compone un resultado multi-dominio.
-4. Dinero: enteros en centavos MXN. El saldo no se edita en la cuenta. Solo ledger escribe asientos, y aún no está implementado.
+4. Dinero: enteros en céntimos de EUR. El saldo no se edita en la cuenta. Cada cuenta tiene un IBAN español. Solo `src/ledger/` escribe asientos: apertura y traspasos internos confirmados.
 5. Runtime: Bun. No introduzcas npm, yarn ni pnpm ni un framework distinto sin ADR.
 6. Persistencia: MongoDB Atlas (`MONGODB_URI`). Auth: roles `administrador` y `cuentahabiente`, sesión JWT, rutas protegidas salvo `/login`, `/api/health`, el manifest y el service worker. El administrador solo entra a Inicio y Configuración.
 7. UI: columna de teléfono, navegación inferior, PWA. No diseñes primero para escritorio.

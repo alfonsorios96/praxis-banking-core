@@ -21,3 +21,5 @@ Las decisiones aquí son **parte de la constitución** una vez ratificadas. Form
 | 0006 | Aceptada | PWA mobile-first |
 | 0007 | Aceptada | Roles administrador y cuentahabiente |
 | 0008 | Aceptada | Liberación gradual de una sola versión |
+| 0009 | Aceptada | Cuentas y transferencias internas |
+| 0010 | Aceptada | IBAN español y euro |

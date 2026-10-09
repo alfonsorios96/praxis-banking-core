@@ -2,11 +2,11 @@ import { accessCounts } from "@/db/directory";
 
 const MODULES = [
   { name: "Identidad", status: "Activo" },
-  { name: "Cuentas", status: "En espera" },
+  { name: "Cuentas", status: "Activo" },
   { name: "Tarjetas", status: "En espera" },
-  { name: "Transferencias", status: "En espera" },
+  { name: "Transferencias", status: "Activo" },
   { name: "Pagos", status: "En espera" },
-  { name: "Ledger", status: "Sin asientos" },
+  { name: "Ledger", status: "Activo" },
 ] as const;
 
 export async function AdminHome() {

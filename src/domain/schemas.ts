@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-export const currencySchema = z.literal("MXN");
+export const currencySchema = z.literal("EUR");
+
+export const CURRENCY = "EUR" as const;
 
 export const moneySchema = z.object({
   currency: currencySchema,
@@ -24,13 +26,25 @@ export const identitySchema = z.object({
 
 export const accountStatusSchema = z.enum(["open", "frozen", "closed"]);
 
-export const accountSchema = z.object({
-  id: z.string().min(1),
-  ownerId: z.string().min(1),
-  label: z.string().trim().min(1).max(80),
-  status: accountStatusSchema,
-  currency: currencySchema,
-});
+export const ACCOUNT_KINDS = ["checking", "savings", "treasury"] as const;
+
+export const accountKindSchema = z.enum(ACCOUNT_KINDS);
+
+export type AccountKind = (typeof ACCOUNT_KINDS)[number];
+
+export const accountSchema = z
+  .object({
+    id: z.string().min(1),
+    ownerId: z.string().min(1).nullable(),
+    kind: accountKindSchema,
+    label: z.string().trim().min(1).max(80),
+    iban: z.string().regex(/^ES\d{22}$/),
+    status: accountStatusSchema,
+    currency: currencySchema,
+  })
+  .refine((account) => (account.kind === "treasury" ? account.ownerId === null : account.ownerId !== null), {
+    message: "La tesorería no tiene titular; las demás cuentas sí.",
+  });
 
 export const cardStatusSchema = z.enum(["active", "frozen", "cancelled"]);
 

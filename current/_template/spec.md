@@ -25,7 +25,7 @@ Quién inicia, quién confirma, qué agente interviene.
 
 ## Entidades de dominio
 
-Usuario, cuenta, tarjeta, transferencia, pago, asiento, saldo. El dinero va en centavos MXN.
+Usuario, cuenta, tarjeta, transferencia, pago, asiento, saldo. El dinero va en céntimos de EUR. La cuenta se identifica con IBAN.
 
 ## Criterios de aceptación
 
