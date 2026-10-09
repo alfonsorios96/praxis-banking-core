@@ -1,0 +1,18 @@
+---
+description: Constitución de Praxis — precedencia y misión de agentes.
+alwaysApply: true
+---
+
+# Constitución
+
+Lee y obedece `docs/constitution.md`. Precedencia: constitución → `docs/decisions/` → spec en `current/` → código.
+
+Misión: automatizar y ayudar un core bancario (usuarios, cuentas, tarjetas, transferencias, pagos).
+
+Stack: Next.js, Bun, TypeScript, MongoDB Atlas, sesión JWT, un solo rol `user`, PWA mobile-first.
+
+Dinero en centavos enteros (MXN). Solo el agente ledger muta asientos. Los agentes proponen; un efecto sobre saldo exige confirmación explícita del titular.
+
+No implementes funcionalidad sustancial en `src/` sin spec activa en `current/<id>/` o ADR ratificado.
+
+No importes archivos de `current/` desde `src/`.

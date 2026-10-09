@@ -1,0 +1,39 @@
+import type { Metadata } from "next";
+import { AGENT_MISSIONS, SUBAGENTS } from "@/agents";
+import { verifySession } from "@/auth/dal";
+
+export const metadata: Metadata = {
+  title: "Inicio",
+};
+
+export default async function HomePage() {
+  const session = await verifySession();
+
+  return (
+    <section className="flex flex-col gap-6">
+      <div className="flex flex-col gap-2">
+        <p className="text-xs font-medium tracking-[0.18em] text-gold uppercase">
+          Core bancario
+        </p>
+        <h1 className="font-display text-4xl tracking-tight text-ink">
+          Hola, {session?.username}
+        </h1>
+        <p className="text-base leading-7 text-muted">
+          El shell está listo. Cuentas, tarjetas, transferencias y pagos esperan
+          su spec. Nada de esto mueve dinero todavía.
+        </p>
+      </div>
+      <ul className="flex flex-col gap-3">
+        {SUBAGENTS.map((name) => (
+          <li
+            key={name}
+            className="rounded-2xl border border-line bg-white/70 px-4 py-3"
+          >
+            <p className="text-sm font-medium text-ink">{name}</p>
+            <p className="mt-1 text-sm leading-6 text-muted">{AGENT_MISSIONS[name]}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}

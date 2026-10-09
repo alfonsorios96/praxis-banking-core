@@ -1,0 +1,11 @@
+---
+description: Harness Spec-Driven Development (current/ y docs/).
+alwaysApply: true
+---
+
+# SDD
+
+- Trabajo parcial de IA: `current/<id-kebab>/` a partir de `current/_template/` o `bun run sdd:new -- --id <id>`.
+- Decisiones permanentes: ADR en `docs/decisions/`, enlazadas en `docs/constitution.md` §6.
+- Flujo: Specify → Plan → Tasks → Build → Decide → Promote. Detalle en `docs/processes/spec-driven-development.md`.
+- Git no versiona el trabajo bajo `current/` salvo plantilla y README.

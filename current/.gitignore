@@ -1,0 +1,5 @@
+*
+!_template/
+!_template/**
+!.gitignore
+!README.md
