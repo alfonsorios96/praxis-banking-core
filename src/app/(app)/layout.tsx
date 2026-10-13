@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { verifySession } from "@/auth/dal";
 import { platformDisplayName } from "@/db/directory";
 import { DEFAULT_DISPLAY_NAME } from "@/db/models/platform-settings";
+import { currentBuildId } from "@/releases/build-id";
 import { releaseOfferFor } from "@/releases/offer";
 import { BottomNav } from "@/ui/bottom-nav";
 import { PhoneFrame } from "@/ui/phone-frame";
@@ -38,6 +39,7 @@ export default async function AppLayout({
           username={session.username}
           role={session.role}
           displayName={displayName}
+          version={currentBuildId()}
         />
       }
       footer={<BottomNav role={session.role} />}

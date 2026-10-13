@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test";
 import { readFirebaseAdminCredentials, readFirebasePublicConfig } from "./credentials";
 import { deliverTransferPush } from "./deliver";
 import { shouldNotifyRecipient, transferPushData } from "./message";
+import { shouldOfferPushPrompt } from "./prompt";
+import { pushPromptSeenKey } from "./storage";
 import { deviceTokenSchema } from "./token";
 
 const pushData = {
@@ -123,6 +125,15 @@ describe("aviso de transferencia", () => {
     expect(sent).toEqual(["token-sano-0000000000002"]);
     expect(forgotten).toEqual([]);
     expect(result.forgotten).toEqual([]);
+  });
+
+  test("el alta solo se ofrece la primera vez y si el permiso sigue pendiente", () => {
+    expect(shouldOfferPushPrompt("default", false)).toBe(true);
+    expect(shouldOfferPushPrompt("default", true)).toBe(false);
+    expect(shouldOfferPushPrompt("granted", false)).toBe(false);
+    expect(shouldOfferPushPrompt("denied", false)).toBe(false);
+    expect(shouldOfferPushPrompt("hidden", false)).toBe(false);
+    expect(pushPromptSeenKey("sofia")).toBe("praxis.pushPromptSeen.sofia");
   });
 
   test("acepta un token de registro y rechaza uno corto", () => {

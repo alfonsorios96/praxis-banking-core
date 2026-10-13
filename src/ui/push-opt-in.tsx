@@ -4,26 +4,32 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { registerDeviceToken } from "@/app/actions/push";
 import { listenForeground, subscribeDevice } from "@/notifications/browser";
 import { readFirebasePublicConfig, type FirebasePublicConfig } from "@/notifications/credentials";
-import { writeDeviceToken } from "@/notifications/storage";
+import { shouldOfferPushPrompt } from "@/notifications/prompt";
+import { hasSeenPushPrompt, rememberPushPrompt, writeDeviceToken } from "@/notifications/storage";
 
 const HIDDEN = "hidden";
 
 type PushGate = NotificationPermission | typeof HIDDEN;
 
-export function PushOptIn() {
-  const detected = useSyncExternalStore(subscribePushGate, readPushGate, () => HIDDEN);
-  const [override, setOverride] = useState<NotificationPermission | null>(null);
+const offerForVisit = new Map<string, boolean>();
+
+export function PushOptIn({ username }: { username: string }) {
+  const offer = useSyncExternalStore(
+    subscribePushGate,
+    () => readOffer(username),
+    () => false,
+  );
   const [pending, setPending] = useState(false);
   const [failed, setFailed] = useState(false);
-  const permission = override ?? (detected === HIDDEN ? null : detected);
 
   useEffect(() => {
-    if (detected === HIDDEN) {
+    const permission = readPushGate();
+    const config = readFirebasePublicConfig();
+    if (permission === HIDDEN || !config) {
       return;
     }
-    const config = readFirebasePublicConfig();
-    if (!config) {
-      return;
+    if (permission === "default" && offerForVisit.get(username) === true) {
+      rememberPushPrompt(username);
     }
     let stop = () => {};
     try {
@@ -38,17 +44,18 @@ export function PushOptIn() {
         };
       });
     } catch {
-      return;
+      stop = () => {};
     }
-    if (detected === "granted") {
-      void activate(config).then((ok) => {
-        if (!ok) {
-          setFailed(true);
-        }
-      });
+    if (permission === "granted") {
+      void activate(config);
     }
-    return stop;
-  }, [detected]);
+    return () => {
+      stop();
+      if (hasSeenPushPrompt(username)) {
+        offerForVisit.set(username, false);
+      }
+    };
+  }, [username]);
 
   async function enable() {
     const config = readFirebasePublicConfig();
@@ -57,9 +64,9 @@ export function PushOptIn() {
     }
     setPending(true);
     setFailed(false);
+    rememberPushPrompt(username);
     try {
       const next = await Notification.requestPermission();
-      setOverride(next);
       if (next !== "granted") {
         return;
       }
@@ -74,49 +81,47 @@ export function PushOptIn() {
     }
   }
 
-  if (!permission) {
+  if (!offer) {
     return null;
   }
 
   return (
     <section className="flex flex-col gap-2 rounded-2xl border border-line bg-white/70 px-4 py-4">
       <p className="text-sm font-medium text-ink">Avisos de transferencias</p>
-      {permission === "granted" ? (
-        <p className="text-sm leading-6 text-muted">
-          {failed ? "No se pudieron activar los avisos." : "Avisos activos en este dispositivo."}
+      <p className="text-sm leading-6 text-muted">
+        Te avisamos en este teléfono cuando recibes un traspaso.
+      </p>
+      {failed ? (
+        <p className="text-sm text-red-700" role="alert">
+          No se pudieron activar los avisos.
         </p>
       ) : null}
-      {permission === "denied" ? (
-        <p className="text-sm leading-6 text-muted">El navegador tiene los avisos bloqueados.</p>
-      ) : null}
-      {permission === "default" ? (
-        <>
-          <p className="text-sm leading-6 text-muted">
-            Te avisamos en este teléfono cuando recibes un traspaso.
-          </p>
-          {failed ? (
-            <p className="text-sm text-red-700" role="alert">
-              No se pudieron activar los avisos.
-            </p>
-          ) : null}
-          <button
-            type="button"
-            disabled={pending}
-            onClick={() => {
-              void enable();
-            }}
-            className="min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
-          >
-            {pending ? "Activando…" : "Activar avisos"}
-          </button>
-        </>
-      ) : null}
+      <button
+        type="button"
+        disabled={pending}
+        onClick={() => {
+          void enable();
+        }}
+        className="min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
+      >
+        {pending ? "Activando…" : "Activar avisos"}
+      </button>
     </section>
   );
 }
 
 function subscribePushGate(): () => void {
   return () => {};
+}
+
+function readOffer(username: string): boolean {
+  const cached = offerForVisit.get(username);
+  if (cached !== undefined) {
+    return cached;
+  }
+  const offer = shouldOfferPushPrompt(readPushGate(), hasSeenPushPrompt(username));
+  offerForVisit.set(username, offer);
+  return offer;
 }
 
 function readPushGate(): PushGate {

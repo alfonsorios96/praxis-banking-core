@@ -34,7 +34,7 @@ export default async function HomePage() {
           interna mueve euros cuando la confirmas. Tarjetas y pagos siguen en espera.
         </p>
       </div>
-      <PushOptIn />
+      <PushOptIn username={session.username} />
       <ul className="flex flex-col gap-3">
         {SUBAGENTS.map((name) => (
           <li

@@ -1,15 +1,36 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { acceptRelease } from "@/app/actions/release";
 import { RELEASE_APPLY_STORAGE_KEY } from "@/releases/constants";
+import { releasePromptStorageKey, shouldShowReleasePrompt } from "@/releases/prompt";
 
 function subscribe(): () => void {
   return () => {};
 }
 
-function applyOnLoad(buildId: string): boolean {
-  return sessionStorage.getItem(RELEASE_APPLY_STORAGE_KEY) === buildId;
+function hasSeenReleasePrompt(buildId: string): boolean {
+  try {
+    if (window.localStorage.getItem(releasePromptStorageKey(buildId)) === "1") {
+      return true;
+    }
+    return window.sessionStorage.getItem(RELEASE_APPLY_STORAGE_KEY) === buildId;
+  } catch {
+    return false;
+  }
+}
+
+function rememberReleasePrompt(buildId: string): void {
+  try {
+    window.localStorage.setItem(releasePromptStorageKey(buildId), "1");
+    window.sessionStorage.removeItem(RELEASE_APPLY_STORAGE_KEY);
+  } catch {
+    // Si el navegador no guarda, el aviso puede volver en el siguiente refresh.
+  }
+}
+
+function readShowReleasePrompt(buildId: string): boolean {
+  return shouldShowReleasePrompt(hasSeenReleasePrompt(buildId));
 }
 
 async function activateWaitingWorker(): Promise<void> {
@@ -36,57 +57,43 @@ async function activateWaitingWorker(): Promise<void> {
 }
 
 export function ReleaseOffer({ buildId }: { buildId: string }) {
-  const deferred = useSyncExternalStore(
+  const show = useSyncExternalStore(
     subscribe,
-    () => applyOnLoad(buildId),
+    () => readShowReleasePrompt(buildId),
     () => false,
   );
   const [dismissed, setDismissed] = useState(false);
   const [pending, setPending] = useState(false);
-  const [failed, setFailed] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const started = useRef(false);
-
-  const loadNow = useCallback(async (): Promise<void> => {
-    setPending(true);
-    setError(null);
-    try {
-      const result = await acceptRelease(buildId);
-      if (!result.ok) {
-        sessionStorage.removeItem(RELEASE_APPLY_STORAGE_KEY);
-        setFailed(true);
-        setPending(false);
-        setError("No se pudo cargar esta versión.");
-        return;
-      }
-      await activateWaitingWorker();
-      sessionStorage.removeItem(RELEASE_APPLY_STORAGE_KEY);
-      window.location.reload();
-    } catch {
-      sessionStorage.removeItem(RELEASE_APPLY_STORAGE_KEY);
-      setFailed(true);
-      setPending(false);
-      setError("No se pudo cargar esta versión.");
-    }
-  }, [buildId]);
 
   useEffect(() => {
-    if (!deferred || failed || started.current) {
+    if (!hasSeenReleasePrompt(buildId)) {
+      const remember = () => rememberReleasePrompt(buildId);
+      window.addEventListener("pagehide", remember);
+      return () => window.removeEventListener("pagehide", remember);
+    }
+    void applyRelease(buildId);
+  }, [buildId]);
+
+  async function loadNow(): Promise<void> {
+    setPending(true);
+    setError(null);
+    rememberReleasePrompt(buildId);
+    const ok = await applyRelease(buildId);
+    if (!ok) {
+      setPending(false);
+      setError("No se pudo cargar esta versión.");
       return;
     }
-    started.current = true;
-    void loadNow();
-  }, [deferred, failed, loadNow]);
+    window.location.reload();
+  }
 
   function dismiss(): void {
-    sessionStorage.setItem(RELEASE_APPLY_STORAGE_KEY, buildId);
+    rememberReleasePrompt(buildId);
     setDismissed(true);
   }
 
-  if (!failed && (deferred || pending)) {
-    return <p className="mb-6 text-sm text-muted">Cargando la versión nueva…</p>;
-  }
-  if (dismissed) {
+  if (!show || dismissed) {
     return null;
   }
 
@@ -108,7 +115,7 @@ export function ReleaseOffer({ buildId }: { buildId: string }) {
           disabled={pending}
           className="min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
         >
-          Cargar ahora
+          {pending ? "Cargando…" : "Cargar ahora"}
         </button>
         <button
           type="button"
@@ -121,4 +128,17 @@ export function ReleaseOffer({ buildId }: { buildId: string }) {
       </div>
     </section>
   );
+}
+
+async function applyRelease(buildId: string): Promise<boolean> {
+  try {
+    const result = await acceptRelease(buildId);
+    if (!result.ok) {
+      return false;
+    }
+    await activateWaitingWorker();
+    return true;
+  } catch {
+    return false;
+  }
 }
