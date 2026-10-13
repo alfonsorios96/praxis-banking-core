@@ -1,6 +1,6 @@
-import { logout } from "@/app/actions/auth";
 import { roleLabel } from "@/auth/access";
 import type { UserRole } from "@/domain/schemas";
+import { LogoutButton } from "@/ui/logout-button";
 
 export function AppHeader({
   username,
@@ -25,14 +25,7 @@ export function AppHeader({
             {roleLabel(role)}
           </span>
         </div>
-        <form action={logout}>
-          <button
-            type="submit"
-            className="min-h-11 px-2 text-sm font-medium text-accent"
-          >
-            Salir
-          </button>
-        </form>
+        <LogoutButton />
       </div>
     </header>
   );

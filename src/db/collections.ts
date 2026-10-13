@@ -7,4 +7,5 @@ export const COLLECTIONS = {
   accounts: "accounts",
   transfers: "transfers",
   ledgerEntries: "ledger_entries",
+  deviceTokens: "device_tokens",
 } as const;

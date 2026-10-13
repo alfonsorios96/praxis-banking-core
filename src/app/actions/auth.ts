@@ -2,12 +2,14 @@
 
 import { redirect } from "next/navigation";
 import { landingPath } from "@/auth/access";
+import { verifySession } from "@/auth/dal";
 import { type LoginFormState, loginSchema, safeNextPath } from "@/auth/login-schema";
 import { verifyPassword } from "@/auth/password";
 import { createSession, deleteSession } from "@/auth/session";
 import { connectDb } from "@/db/connect";
 import { User } from "@/db/models/user";
 import { userRoleSchema } from "@/domain/schemas";
+import { removeDeviceToken } from "@/notifications/tokens";
 
 export async function login(
   _state: LoginFormState,
@@ -59,7 +61,16 @@ export async function login(
   redirect(nextPath);
 }
 
-export async function logout(): Promise<void> {
+export async function logout(formData: FormData): Promise<void> {
+  const token = formData instanceof FormData ? String(formData.get("deviceToken") ?? "") : "";
+  const session = await verifySession();
+  if (session && token) {
+    try {
+      await removeDeviceToken(session.userId, token);
+    } catch (error) {
+      console.error("[praxis] push", error instanceof Error ? error.message : "error");
+    }
+  }
   await deleteSession();
   redirect("/login");
 }

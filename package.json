@@ -13,6 +13,8 @@
   "dependencies": {
     "@serwist/next": "^9.5.13",
     "bcryptjs": "^3.0.3",
+    "firebase": "^13.0.0",
+    "firebase-admin": "^14.5.0",
     "jose": "^6.2.12",
     "lucide-react": "^1.54.0",
     "mongoose": "^9.11.1",

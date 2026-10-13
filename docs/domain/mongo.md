@@ -78,6 +78,18 @@ La escribe el flujo de traspaso, en la misma transacción que el asiento. No es 
 
 El saldo de una cuenta es la suma de sus créditos menos sus débitos. El alta acredita al titular y debita tesorería.
 
+## `device_tokens` (implementada)
+
+La escribe el módulo de notificaciones cuando un cuentahabiente activa los avisos en un navegador. No guarda dinero. Un token pertenece a un solo usuario: registrarlo de nuevo cambia el `userId`.
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| userId | string | Id del cuentahabiente. |
+| token | string | Único. Token de registro de FCM. |
+| createdAt / updatedAt | date | `timestamps` de Mongoose. |
+
+Índice en `userId`. Índice único en `token`.
+
 ## Colecciones futuras
 
 No se crean modelos ni índices hasta la spec que las introduzca.

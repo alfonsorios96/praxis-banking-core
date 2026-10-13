@@ -23,3 +23,4 @@ Las decisiones aquí son **parte de la constitución** una vez ratificadas. Form
 | 0008 | Aceptada | Liberación gradual de una sola versión |
 | 0009 | Aceptada | Cuentas y transferencias internas |
 | 0010 | Aceptada | IBAN español y euro |
+| 0011 | Aceptada | Notificaciones push al recibir una transferencia |

@@ -1,8 +1,8 @@
 # Constitución de Praxis
 
-**Versión:** 2.3.0  
+**Versión:** 2.4.0  
 **Ratificada:** 2026-10-09  
-**Enmendada:** 2026-10-09 ([ADR 0010](./decisions/0010-iban-y-euro.md))  
+**Enmendada:** 2026-10-13 ([ADR 0011](./decisions/0011-notificaciones-push.md))  
 **Alcance:** Toda decisión, especificación, agente y línea de código de este repositorio.
 
 Esta constitución es la norma de mayor rango del proyecto. Ninguna especificación, ADR, prompt de agente ni implementación puede contradecirla. Si hay conflicto, se corrige el artefacto inferior o se enmienda esta constitución mediante una decisión ratificada en `docs/decisions/`.
@@ -63,8 +63,11 @@ No se introduce runtime, marco, base de datos ni librería de autenticación dis
 | Validación | Zod |
 | Sesión | JWT HS256 (`jose`) en cookie HttpOnly |
 | Contraseñas | bcryptjs |
+| Avisos al dispositivo | Firebase Cloud Messaging (web push) |
 
-Detalle: [ADR 0001](./decisions/0001-stack-tecnologico.md), [ADR 0004](./decisions/0004-mongodb-y-autenticacion.md), [ADR 0006](./decisions/0006-pwa-mobile-first.md). Esquema Atlas: [`docs/domain/mongo.md`](./domain/mongo.md).
+Un traspaso interno confirmado puede avisar al destinatario en sus dispositivos. Ese aviso no es un asiento: si no sale, el dinero ya movido permanece. Ver [ADR 0011](./decisions/0011-notificaciones-push.md).
+
+Detalle: [ADR 0001](./decisions/0001-stack-tecnologico.md), [ADR 0004](./decisions/0004-mongodb-y-autenticacion.md), [ADR 0006](./decisions/0006-pwa-mobile-first.md), [ADR 0011](./decisions/0011-notificaciones-push.md). Esquema Atlas: [`docs/domain/mongo.md`](./domain/mongo.md).
 
 ### 2.7 Acceso autenticado
 
@@ -144,3 +147,4 @@ Sin ADR, no hay enmienda.
 | [0008](./decisions/0008-liberacion-gradual.md) | Liberación gradual de una sola versión |
 | [0009](./decisions/0009-cuentas-y-transferencias-internas.md) | Cuentas y transferencias internas |
 | [0010](./decisions/0010-iban-y-euro.md) | IBAN español y euro |
+| [0011](./decisions/0011-notificaciones-push.md) | Notificaciones push al recibir una transferencia |

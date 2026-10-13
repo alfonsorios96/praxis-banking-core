@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { ROLE_CUENTAHABIENTE } from "@/auth/constants";
 import { requireRole } from "@/auth/guard";
 import { eurosToCents, formatEur } from "@/domain/money";
+import { shouldNotifyRecipient } from "@/notifications/message";
+import { notifyTransferReceived } from "@/notifications/send";
 import { confirmInternalTransfer } from "@/transfers/confirm";
 import type { TransferActionState, TransferDraft } from "@/transfers/form-state";
 import { inspectTransfer } from "@/transfers/inspect";
@@ -60,6 +62,15 @@ export async function transferAction(
         values,
         draft,
       };
+    }
+
+    if (shouldNotifyRecipient(result)) {
+      await notifyTransferReceived({
+        recipientUserId: values.recipientUserId,
+        amountMinor,
+        senderUserId: session.userId,
+        senderFallback: session.username,
+      });
     }
 
     redirect("/transferencias?hecha=1");

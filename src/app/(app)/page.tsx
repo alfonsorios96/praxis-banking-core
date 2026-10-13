@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { AGENT_MISSIONS, SUBAGENTS } from "@/agents";
 import { ROLE_ADMINISTRADOR } from "@/auth/constants";
 import { verifySession } from "@/auth/dal";
+import { PushOptIn } from "@/ui/push-opt-in";
 import { AdminHome } from "./admin-home";
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export default async function HomePage() {
           interna mueve euros cuando la confirmas. Tarjetas y pagos siguen en espera.
         </p>
       </div>
+      <PushOptIn />
       <ul className="flex flex-col gap-3">
         {SUBAGENTS.map((name) => (
           <li
