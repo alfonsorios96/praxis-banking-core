@@ -90,6 +90,18 @@ La escribe el módulo de notificaciones cuando un cuentahabiente activa los avis
 
 Índice en `userId`. Índice único en `token`.
 
+## `module_access` (implementada)
+
+La escribe Configuración. No guarda dinero. Sin fila, o sin campo, el módulo está activo.
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| userId | string | Único. Id del cuentahabiente. |
+| cards | boolean | Tarjetas. |
+| payments | boolean | Pagos. |
+| transfers | boolean | Transferencias. |
+| createdAt / updatedAt | date | `timestamps` de Mongoose. |
+
 ## Colecciones futuras
 
 No se crean modelos ni índices hasta la spec que las introduzca.

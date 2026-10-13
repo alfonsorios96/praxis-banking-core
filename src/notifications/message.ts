@@ -1,4 +1,5 @@
 import { formatEur } from "@/domain/money";
+import { MODULE_LABEL, MODULE_PATH, type ModuleKey } from "@/modules/keys";
 import { TRANSFER_PUSH_PATH, TRANSFER_PUSH_TITLE } from "./constants";
 
 const FALLBACK_SENDER = "Otro cuentahabiente";
@@ -36,5 +37,13 @@ export function transferPushData(input: {
     title: TRANSFER_PUSH_TITLE,
     body: transferPushBody(input.amountMinor, input.senderLabel),
     url: TRANSFER_PUSH_PATH,
+  };
+}
+
+export function modulePushData(key: ModuleKey, enabled: boolean): Record<string, string> {
+  return {
+    title: MODULE_LABEL[key],
+    body: enabled ? "Ya está disponible. Toca para abrirlo." : "Ya no está disponible.",
+    url: enabled ? MODULE_PATH[key] : "/",
   };
 }

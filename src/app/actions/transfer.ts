@@ -3,7 +3,7 @@
 import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 import { ROLE_CUENTAHABIENTE } from "@/auth/constants";
-import { requireRole } from "@/auth/guard";
+import { moduleEnabled, requireRole } from "@/auth/guard";
 import { eurosToCents, formatEur } from "@/domain/money";
 import { shouldNotifyRecipient } from "@/notifications/message";
 import { notifyTransferReceived } from "@/notifications/send";
@@ -26,6 +26,10 @@ export async function transferAction(
 
   if (intent === "edit") {
     return { step: "edit", values };
+  }
+
+  if (!(await moduleEnabled(session.userId, "transfers"))) {
+    return { step: "edit", error: "Las transferencias no están disponibles para ti.", values };
   }
 
   if (intent === "confirm") {

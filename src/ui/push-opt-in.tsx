@@ -87,9 +87,9 @@ export function PushOptIn({ username }: { username: string }) {
 
   return (
     <section className="flex flex-col gap-2 rounded-2xl border border-line bg-white/70 px-4 py-4">
-      <p className="text-sm font-medium text-ink">Avisos de transferencias</p>
+      <p className="text-sm font-medium text-ink">Avisos</p>
       <p className="text-sm leading-6 text-muted">
-        Te avisamos en este teléfono cuando recibes un traspaso.
+        Te avisamos en este teléfono cuando recibes un traspaso o cambia un módulo.
       </p>
       {failed ? (
         <p className="text-sm text-red-700" role="alert">

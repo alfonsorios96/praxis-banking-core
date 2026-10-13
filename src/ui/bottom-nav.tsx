@@ -11,7 +11,7 @@ import {
   Settings,
   type LucideIcon,
 } from "lucide-react";
-import { labelForPath, pathsForRole, type AppPath } from "@/auth/access";
+import { labelForPath, visiblePaths, type AppPath } from "@/auth/access";
 import type { UserRole } from "@/domain/schemas";
 
 const ICONS: Record<AppPath, LucideIcon> = {
@@ -30,9 +30,9 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function BottomNav({ role }: { role: UserRole }) {
+export function BottomNav({ role, hidden }: { role: UserRole; hidden: readonly string[] }) {
   const pathname = usePathname();
-  const tabs = pathsForRole(role);
+  const tabs = visiblePaths(role, hidden);
 
   return (
     <nav

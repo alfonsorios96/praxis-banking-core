@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { listOwnedAccounts, listTransferRecipients } from "@/accounts/queries";
 import type { OwnedAccount, TransferRecipient } from "@/accounts/types";
-import { ROLE_CUENTAHABIENTE } from "@/auth/constants";
-import { requireRole } from "@/auth/guard";
+import { requireModule } from "@/auth/guard";
 import { listHolderTransfers, type TransferHistoryRow } from "@/transfers/history";
 import { TransferForm } from "./transfer-form";
 
@@ -13,7 +12,7 @@ export default async function TransferenciasPage({
 }: {
   searchParams: Promise<{ hecha?: string }>;
 }) {
-  const session = await requireRole(ROLE_CUENTAHABIENTE);
+  const session = await requireModule("transfers");
   const { hecha } = await searchParams;
   const data = await loadTransfers(session.userId);
 

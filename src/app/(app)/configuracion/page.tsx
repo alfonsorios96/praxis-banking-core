@@ -6,6 +6,9 @@ import { listPeople, platformDisplayName, type DirectoryPerson } from "@/db/dire
 import { connectDb } from "@/db/connect";
 import { eligibleHolderCount } from "@/releases/cohort";
 import { readCurrentRelease, type StoredRelease } from "@/releases/store";
+import { MODULE_KEYS, MODULE_LABEL, type ModuleState } from "@/modules/keys";
+import { readModuleStates } from "@/modules/store";
+import { ModulesForm } from "./modules-form";
 import { ReleaseForm } from "./release-form";
 import { SettingsForm } from "./settings-form";
 
@@ -62,6 +65,31 @@ export default async function ConfiguracionPage() {
       </div>
 
       <div className="flex flex-col gap-3">
+        <h2 className="font-display text-3xl tracking-tight text-ink">Módulos</h2>
+        <p className="text-sm leading-6 text-muted">
+          Marca personas y activa o desactiva el módulo. Solo cambia quien marcas, y le llega
+          un aviso a sus dispositivos.
+        </p>
+        {data.modules ? (
+          MODULE_KEYS.map((key) => (
+            <ModulesForm
+              key={key}
+              moduleKey={key}
+              label={MODULE_LABEL[key]}
+              holders={data.holders.map((holder) => ({
+                id: holder.id,
+                username: holder.username,
+                fullName: holder.fullName,
+                enabled: data.modules?.get(holder.id)?.[key] ?? true,
+              }))}
+            />
+          ))
+        ) : (
+          <p className="text-sm leading-6 text-muted">No se pudieron leer los módulos.</p>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-3">
         <h2 className="text-sm font-medium text-ink">Personas</h2>
         {data.people.length === 0 ? (
           <p className="text-sm leading-6 text-muted">Todavía no hay personas.</p>
@@ -105,6 +133,7 @@ async function loadConfiguration(): Promise<{
     steps: { at: string; percent: number }[];
     eligibleHolders: number;
   } | null;
+  modules: Map<string, ModuleState> | null;
 } | null> {
   try {
     await connectDb();
@@ -119,7 +148,17 @@ async function loadConfiguration(): Promise<{
       people,
       holders,
       release: release ? presentRelease(release, holders.map((holder) => holder.id)) : null,
+      modules: await loadModules(holders.map((holder) => holder.id)),
     };
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function loadModules(holderIds: string[]) {
+  try {
+    return await readModuleStates(holderIds);
   } catch (error) {
     console.error(error);
     return null;

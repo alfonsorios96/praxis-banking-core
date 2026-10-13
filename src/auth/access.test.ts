@@ -6,6 +6,7 @@ import {
   canAccessPath,
   landingPath,
   pathsForRole,
+  visiblePaths,
 } from "./access";
 
 describe("userRoleSchema", () => {
@@ -37,6 +38,16 @@ describe("acceso por rol", () => {
     expect(canAccessPath("cuentahabiente", "/transferencias")).toBe(true);
     expect(canAccessPath("cuentahabiente", "/pagos")).toBe(true);
     expect(canAccessPath("cuentahabiente", "/configuracion")).toBe(false);
+  });
+
+  test("la barra omite los módulos apagados", () => {
+    expect(visiblePaths("cuentahabiente", ["/pagos"])).toEqual([
+      "/",
+      "/cuentas",
+      "/tarjetas",
+      "/transferencias",
+    ]);
+    expect(visiblePaths("cuentahabiente", [])).toEqual(HOLDER_PATHS);
   });
 
   test("una ruta pedida al rol equivocado cae en inicio", () => {

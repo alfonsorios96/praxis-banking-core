@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { readFirebaseAdminCredentials, readFirebasePublicConfig } from "./credentials";
-import { deliverTransferPush } from "./deliver";
-import { shouldNotifyRecipient, transferPushData } from "./message";
+import { deliverPush } from "./deliver";
+import { modulePushData, shouldNotifyRecipient, transferPushData } from "./message";
 import { shouldOfferPushPrompt } from "./prompt";
 import { pushPromptSeenKey } from "./storage";
 import { deviceTokenSchema } from "./token";
@@ -35,6 +35,19 @@ describe("aviso de transferencia", () => {
     ]);
   });
 
+  test("el aviso de módulo abre el módulo o Inicio", () => {
+    expect(modulePushData("payments", true)).toEqual({
+      title: "Pagos",
+      body: "Ya está disponible. Toca para abrirlo.",
+      url: "/pagos",
+    });
+    expect(modulePushData("transfers", false)).toEqual({
+      title: "Transferencias",
+      body: "Ya no está disponible.",
+      url: "/",
+    });
+  });
+
   test("un duplicado no avisa y un rechazo tampoco", () => {
     expect(shouldNotifyRecipient({ ok: true, duplicate: false })).toBe(true);
     expect(shouldNotifyRecipient({ ok: true, duplicate: true })).toBe(false);
@@ -43,7 +56,7 @@ describe("aviso de transferencia", () => {
 
   test("sin credenciales no envía", async () => {
     let sent = 0;
-    const result = await deliverTransferPush({
+    const result = await deliverPush({
       credentials: null,
       tokens: ["token-de-prueba-1234567890"],
       data: pushData,
@@ -75,7 +88,7 @@ describe("aviso de transferencia", () => {
   test("borra el token que FCM rechaza y sigue con el resto", async () => {
     const forgotten: string[] = [];
     const sent: string[] = [];
-    const result = await deliverTransferPush({
+    const result = await deliverPush({
       credentials,
       tokens: [
         "token-no-registrado-000001",
@@ -108,7 +121,7 @@ describe("aviso de transferencia", () => {
   test("un fallo distinto no borra el token", async () => {
     const forgotten: string[] = [];
     const sent: string[] = [];
-    const result = await deliverTransferPush({
+    const result = await deliverPush({
       credentials,
       tokens: ["token-caido-000000000001", "token-sano-0000000000002"],
       data: pushData,

@@ -16,7 +16,7 @@ export function isStaleDeviceToken(error: unknown): boolean {
   return typeof error.code === "string" && STALE_TOKEN_CODES.has(error.code);
 }
 
-export async function deliverTransferPush(input: {
+export async function deliverPush(input: {
   credentials: FirebaseAdminCredentials | null;
   tokens: string[];
   data: Record<string, string>;

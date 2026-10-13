@@ -30,6 +30,10 @@ export function pathsForRole(role: UserRole): readonly AppPath[] {
   }
 }
 
+export function visiblePaths(role: UserRole, hidden: readonly string[]): readonly AppPath[] {
+  return pathsForRole(role).filter((path) => !hidden.includes(path));
+}
+
 export function labelForPath(path: AppPath): string {
   return LABELS[path];
 }

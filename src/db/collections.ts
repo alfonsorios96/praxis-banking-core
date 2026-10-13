@@ -8,4 +8,5 @@ export const COLLECTIONS = {
   transfers: "transfers",
   ledgerEntries: "ledger_entries",
   deviceTokens: "device_tokens",
+  moduleAccess: "module_access",
 } as const;

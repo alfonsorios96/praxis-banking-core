@@ -1,5 +1,8 @@
 import { redirect } from "next/navigation";
+import { ROLE_CUENTAHABIENTE } from "@/auth/constants";
 import { verifySession } from "@/auth/dal";
+import { disabledModulePaths, MODULE_KEYS, MODULE_PATH } from "@/modules/keys";
+import { readModuleState } from "@/modules/store";
 import { platformDisplayName } from "@/db/directory";
 import { DEFAULT_DISPLAY_NAME } from "@/db/models/platform-settings";
 import { currentBuildId } from "@/releases/build-id";
@@ -31,6 +34,15 @@ export default async function AppLayout({
   } catch (error) {
     console.error(error);
   }
+  let hidden: string[] = [];
+  if (session.role === ROLE_CUENTAHABIENTE) {
+    try {
+      hidden = disabledModulePaths(await readModuleState(session.userId));
+    } catch (error) {
+      console.error(error);
+      hidden = MODULE_KEYS.map((key) => MODULE_PATH[key]);
+    }
+  }
 
   return (
     <PhoneFrame
@@ -42,7 +54,7 @@ export default async function AppLayout({
           version={currentBuildId()}
         />
       }
-      footer={<BottomNav role={session.role} />}
+      footer={<BottomNav role={session.role} hidden={hidden} />}
     >
       {offer ? <ReleaseOffer buildId={offer} /> : null}
       {children}
