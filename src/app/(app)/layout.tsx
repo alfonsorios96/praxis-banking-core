@@ -5,11 +5,8 @@ import { disabledModulePaths, MODULE_KEYS, MODULE_PATH } from "@/modules/keys";
 import { readModuleState } from "@/modules/store";
 import { platformDisplayName } from "@/db/directory";
 import { DEFAULT_DISPLAY_NAME } from "@/db/models/platform-settings";
-import { currentBuildId } from "@/releases/build-id";
-import { releaseOfferFor } from "@/releases/offer";
 import { BottomNav } from "@/ui/bottom-nav";
 import { PhoneFrame } from "@/ui/phone-frame";
-import { ReleaseOffer } from "@/ui/release-offer";
 import { AppHeader } from "./app-header";
 
 export default async function AppLayout({
@@ -23,14 +20,8 @@ export default async function AppLayout({
   }
 
   let displayName = DEFAULT_DISPLAY_NAME;
-  let offer: string | null = null;
   try {
     displayName = await platformDisplayName();
-  } catch (error) {
-    console.error(error);
-  }
-  try {
-    offer = await releaseOfferFor(session);
   } catch (error) {
     console.error(error);
   }
@@ -51,12 +42,10 @@ export default async function AppLayout({
           username={session.username}
           role={session.role}
           displayName={displayName}
-          version={currentBuildId()}
         />
       }
       footer={<BottomNav role={session.role} hidden={hidden} />}
     >
-      {offer ? <ReleaseOffer buildId={offer} /> : null}
       {children}
     </PhoneFrame>
   );

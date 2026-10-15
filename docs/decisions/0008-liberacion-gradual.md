@@ -1,6 +1,6 @@
 # ADR 0008: Liberación gradual de una sola versión
 
-- **Estado:** Aceptada
+- **Estado:** Sustituida por [0014](./0014-canary-por-modulos.md)
 - **Fecha:** 2026-10-09
 - **Artículo constitucional:** §2.8
 

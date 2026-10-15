@@ -6,7 +6,7 @@
 
 ## Contexto
 
-Tarjetas, Pagos y Transferencias se abren hoy a todo cuentahabiente por su rol. El administrador necesita retirar o devolver uno de esos módulos a personas concretas sin desplegar otro build. La versión de la app sigue siendo el build ([ADR 0008](./0008-liberacion-gradual.md)); esta decisión no crea versiones por módulo.
+Tarjetas, Pagos y Transferencias se abren hoy a todo cuentahabiente por su rol. El administrador necesita retirar o devolver uno de esos módulos a personas concretas sin desplegar otro build. Esta decisión no crea versiones por módulo. El [ADR 0014](./0014-canary-por-modulos.md) explica el canary con estos módulos.
 
 ## Decisión
 
@@ -20,6 +20,5 @@ Tarjetas, Pagos y Transferencias se abren hoy a todo cuentahabiente por su rol. 
 ## Consecuencias
 
 - La constitución pasa a 2.5.0. El §2.7 dice que el rol permite esas rutas y que el administrador puede retirarlas persona a persona. El §2.6 añade este aviso al canal push.
-- Quien pospuso la release conserva el worker anterior y no recibe el aviso hasta activarla. El servidor aplica el estado igual.
 - No hay porcentajes ni fechas por módulo. Un rollout por módulo exige otra decisión.
 - Un alta nueva nace con los tres módulos.

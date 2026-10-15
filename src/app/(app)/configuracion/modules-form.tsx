@@ -2,7 +2,12 @@
 
 import { useActionState } from "react";
 import { updateModuleAccess } from "@/app/actions/modules";
-import type { ModuleKey } from "@/modules/keys";
+import {
+  ROLLOUT_STAGE_LABEL,
+  rolloutPercent,
+  rolloutStage,
+  type ModuleKey,
+} from "@/modules/keys";
 
 type Holder = {
   id: string;
@@ -22,16 +27,46 @@ export function ModulesForm({
 }) {
   const [state, action, pending] = useActionState(updateModuleAccess, undefined);
   const active = holders.filter((holder) => holder.enabled).length;
+  const stage = rolloutStage(active, holders.length);
 
   return (
     <form action={action} className="flex flex-col gap-3 border-t border-line pt-4">
       <input type="hidden" name="module" value={moduleKey} />
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         <h3 className="text-base font-medium text-ink">{label}</h3>
-        <p className="shrink-0 text-sm text-muted">
-          {active} de {holders.length} activos
-        </p>
+        <span
+          className={`shrink-0 rounded-full px-2.5 py-0.5 text-sm ${
+            stage === "off"
+              ? "border border-line text-muted"
+              : stage === "all"
+                ? "bg-accent text-on-accent"
+                : "border border-accent text-accent"
+          }`}
+        >
+          {ROLLOUT_STAGE_LABEL[stage]}
+        </span>
       </div>
+
+      {holders.length > 0 ? (
+        <div className="flex flex-col gap-1.5">
+          <div
+            className="flex gap-1"
+            role="img"
+            aria-label={`${label}: ${active} de ${holders.length} cuentahabientes con el módulo activo`}
+          >
+            {holders.map((holder) => (
+              <span
+                key={holder.id}
+                title={holder.fullName || holder.username}
+                className={`h-3 flex-1 rounded-full ${holder.enabled ? "bg-accent" : "bg-line"}`}
+              />
+            ))}
+          </div>
+          <p className="text-sm text-muted">
+            {active} de {holders.length} · {rolloutPercent(active, holders.length)} %
+          </p>
+        </div>
+      ) : null}
 
       {holders.length === 0 ? (
         <p className="text-sm text-muted">No hay cuentahabientes.</p>

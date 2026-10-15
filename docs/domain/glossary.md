@@ -5,9 +5,8 @@ Términos del core. Los esquemas de frontera viven en `src/domain`. Las coleccio
 | Término | Significado |
 | --- | --- |
 | Usuario | Cuenta de acceso con rol `administrador` o `cuentahabiente`. Entra con usuario y contraseña. |
-| Administrador | Rol que ve los paneles de inicio y configura el nombre visible y la release. No opera cuentas ni instrumentos. Siempre es candidato a la release actual. |
-| Release | Build único de Next.js, servidor y cliente juntos. No hay dos procesos históricos a la vez. |
-| Candidato | Quien puede tomar la release actual: todo administrador, un cuentahabiente de la lista, o uno cuyo cubo cae en el porcentaje vigente. |
+| Administrador | Rol que ve los paneles de inicio y configura el nombre visible y los módulos de cada cuentahabiente. No opera cuentas ni instrumentos. |
+| Canary | Abrir un módulo a una persona antes que a las demás, ampliarlo después y revertirlo si falla. Etapas: Apagado, Canario, Parcial y Todos. |
 | Cuentahabiente | Rol que navega inicio, cuentas, tarjetas, transferencias y pagos. Es titular de una corriente y una de ahorro, cada una con IBAN. Tarjetas y pagos siguen en espera de spec. |
 | Sesión | JWT en cookie HttpOnly que acredita al usuario autenticado. |
 | Cuenta | Relación del titular con el banco. Clase `checking` (Corriente) o `savings` (Ahorro), estado `open`, `frozen` o `closed`, moneda `EUR`, identificada por un IBAN español. No guarda el saldo. La tesorería es una cuenta interna sin titular y también tiene IBAN. |

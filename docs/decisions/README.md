@@ -20,9 +20,10 @@ Las decisiones aquí son **parte de la constitución** una vez ratificadas. Form
 | 0005 | Aceptada | Dinero en centavos, ledger y confirmación |
 | 0006 | Aceptada | PWA mobile-first |
 | 0007 | Aceptada | Roles administrador y cuentahabiente |
-| 0008 | Aceptada | Liberación gradual de una sola versión |
+| 0008 | Sustituida por 0014 | Liberación gradual de una sola versión |
 | 0009 | Aceptada | Cuentas y transferencias internas |
 | 0010 | Aceptada | IBAN español y euro |
 | 0011 | Aceptada | Notificaciones push al recibir una transferencia |
 | 0012 | Aceptada | Módulos por persona |
 | 0013 | Aceptada | Color de tema de la PWA |
+| 0014 | Aceptada | Canary release con los módulos |

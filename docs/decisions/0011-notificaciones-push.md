@@ -24,6 +24,5 @@ Hace falta un canal de avisos. Firebase Cloud Messaging no está en el stack y t
 
 - La constitución pasa a 2.4.0. El §2.6 nombra este canal. Los principios de centavos, ledger único y confirmación del titular no cambian.
 - Cambiar la config pública exige un build nuevo: el worker no la lee en caliente.
-- Quien pospone la release ([ADR 0008](./0008-liberacion-gradual.md)) conserva el worker anterior y no recibe avisos hasta activarlo.
 - En iOS el push web solo llega si la PWA está instalada. No se añade una app nativa.
 - Tarjetas, pagos y el aviso al emisor quedan fuera.

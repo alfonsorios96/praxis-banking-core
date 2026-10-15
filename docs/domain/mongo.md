@@ -24,18 +24,9 @@ Un documento. Lo escribe identidad. No guarda dinero.
 | displayName | string | 2–40. Nombre visible en la cabecera autenticada. |
 | createdAt / updatedAt | date | `timestamps` de Mongoose. |
 
-## `releases` (implementada)
+## `releases` (retirada)
 
-Una fila por build de Next.js. La escribe la configuración. No guarda dinero. El build nuevo nace con porcentaje 0.
-
-| Campo | Tipo | Notas |
-| --- | --- | --- |
-| buildId | string | Único. Id del build. |
-| label | string | Hasta 80. Al nacer, igual que `buildId`. |
-| percent | number | Entero 0–100. Suelo manual. |
-| allowUserIds | string[] | Ids de cuentahabientes, además del porcentaje. |
-| steps | `{ at, percent }[]` | Escalón. Cuenta cuando `at` ya pasó. |
-| createdAt / updatedAt | date | `timestamps` de Mongoose. |
+El código ya no la lee ni la escribe ([ADR 0014](../decisions/0014-canary-por-modulos.md)). Si existe en Atlas, se puede borrar a mano.
 
 ## `accounts` (implementada)
 

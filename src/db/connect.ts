@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { ensureHolderAccounts, migrateToEuro } from "@/accounts/ensure";
-import { ensureCurrentRelease } from "@/releases/store";
 import { DB_NAME } from "./collections";
 import { seedAccess } from "./seed";
 
@@ -64,6 +63,5 @@ export async function connectDb(): Promise<typeof mongoose> {
   await ensureSeed();
   await ensureAccounts();
   await migrateToEuro();
-  await ensureCurrentRelease();
   return stored.conn;
 }

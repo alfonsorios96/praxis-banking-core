@@ -16,7 +16,7 @@ La aplicación es web, y el uso principal es el teléfono. Debe poder instalarse
 - Manifest (`src/app/manifest.ts`), iconos en `public/icons/` e `src/app/icon.png`.
 - Service worker con **Serwist** en modo configurador (`serwist.config.js`, `src/sw.ts` → `public/sw.js`), compatible con el build Turbopack de Next.js 16. `bun run build` ejecuta `next build` y después `serwist build`, que precachea el shell. En `next dev` el provider no registra el worker. En `next start` sí.
 
-> La activación inmediata del worker quedó sustituida por el [ADR 0008](./0008-liberacion-gradual.md). El precache nuevo espera a que el rollout incluya al usuario.
+> El [ADR 0014](./0014-canary-por-modulos.md) devuelve la activación inmediata del worker, que el ADR 0008 había retrasado.
 - `display: standalone`. El tema `#1f4f46` quedó sustituido por el [ADR 0013](./0013-color-de-tema.md).
 
 ## Consecuencias

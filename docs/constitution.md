@@ -1,8 +1,8 @@
 # Constitución de Praxis
 
-**Versión:** 2.6.0  
+**Versión:** 3.0.0  
 **Ratificada:** 2026-10-09  
-**Enmendada:** 2026-10-14 ([ADR 0013](./decisions/0013-color-de-tema.md))  
+**Enmendada:** 2026-10-15 ([ADR 0014](./decisions/0014-canary-por-modulos.md))  
 **Alcance:** Toda decisión, especificación, agente y línea de código de este repositorio.
 
 Esta constitución es la norma de mayor rango del proyecto. Ninguna especificación, ADR, prompt de agente ni implementación puede contradecirla. Si hay conflicto, se corrige el artefacto inferior o se enmienda esta constitución mediante una decisión ratificada en `docs/decisions/`.
@@ -86,7 +86,7 @@ Rutas de producto y APIs de negocio son privadas. Quedan públicas `/login`, el 
 
 La interfaz se diseña para el teléfono y se instala como PWA. En escritorio se presenta como una columna de teléfono. Objetivos táctiles grandes, barra de navegación inferior y respeto a las áreas seguras. Ver [ADR 0006](./decisions/0006-pwa-mobile-first.md).
 
-Una release es el build de Next.js, servidor y cliente juntos. No se ejecutan dos builds históricos en paralelo. El administrador la abre desde Configuración por porcentaje, por fecha o por cuentahabiente concreto. El administrador siempre es candidato. El service worker no activa un precache nuevo hasta que la persona carga esa release: puede hacerlo al ver el aviso o en el siguiente refresh si lo pospuso. Quien no es candidato conserva el cliente anterior. Ver [ADR 0008](./decisions/0008-liberacion-gradual.md).
+Un build nuevo llega a todos al recargar: el service worker se activa en cuanto se instala. Lo que se abre poco a poco son los módulos. Configuración explica el canary con ellos: pocas personas primero, luego más, y desactivar es revertir. Ver [ADR 0014](./decisions/0014-canary-por-modulos.md).
 
 ---
 
@@ -146,9 +146,10 @@ Sin ADR, no hay enmienda.
 | [0005](./decisions/0005-dinero-y-confirmacion.md) | Dinero en centavos, ledger y confirmación |
 | [0006](./decisions/0006-pwa-mobile-first.md) | PWA mobile-first |
 | [0007](./decisions/0007-roles-administrador-y-cuentahabiente.md) | Roles administrador y cuentahabiente |
-| [0008](./decisions/0008-liberacion-gradual.md) | Liberación gradual de una sola versión |
+| [0008](./decisions/0008-liberacion-gradual.md) | Liberación gradual de una sola versión (sustituida por 0014) |
 | [0009](./decisions/0009-cuentas-y-transferencias-internas.md) | Cuentas y transferencias internas |
 | [0010](./decisions/0010-iban-y-euro.md) | IBAN español y euro |
 | [0011](./decisions/0011-notificaciones-push.md) | Notificaciones push al recibir una transferencia |
 | [0012](./decisions/0012-modulos-por-persona.md) | Módulos por persona |
 | [0013](./decisions/0013-color-de-tema.md) | Color de tema de la PWA |
+| [0014](./decisions/0014-canary-por-modulos.md) | Canary release con los módulos |

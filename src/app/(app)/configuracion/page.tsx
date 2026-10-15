@@ -4,13 +4,25 @@ import { roleLabel } from "@/auth/access";
 import { requireRole } from "@/auth/guard";
 import { listPeople, platformDisplayName, type DirectoryPerson } from "@/db/directory";
 import { connectDb } from "@/db/connect";
-import { eligibleHolderCount } from "@/releases/cohort";
-import { readCurrentRelease, type StoredRelease } from "@/releases/store";
 import { MODULE_KEYS, MODULE_LABEL, type ModuleState } from "@/modules/keys";
 import { readModuleStates } from "@/modules/store";
 import { ModulesForm } from "./modules-form";
-import { ReleaseForm } from "./release-form";
 import { SettingsForm } from "./settings-form";
+
+const CANARY_STEPS = [
+  {
+    stage: "Canario",
+    text: "Se activa a una sola persona. Si algo falla, solo lo nota ella.",
+  },
+  {
+    stage: "Parcial",
+    text: "Si va bien, se amplía a más personas y se sigue observando.",
+  },
+  {
+    stage: "Todos",
+    text: "Al final lo tiene todo el mundo. Desactivar en cualquier paso es el rollback.",
+  },
+] as const;
 
 export const metadata: Metadata = { title: "Configuración" };
 
@@ -33,33 +45,38 @@ export default async function ConfiguracionPage() {
     <section className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
         <h1 className="screen-title">Configuración</h1>
-        <p className="text-base leading-6 text-muted">El nombre aparece en la cabecera.</p>
+        <p className="text-base leading-6 text-muted">
+          El nombre aparece en la cabecera. Los módulos se abren a pocas personas antes que a
+          todas.
+        </p>
       </div>
 
       <SettingsForm displayName={data.displayName} />
 
       <div className="flex flex-col gap-3">
-        <h2 className="section-title">Versión</h2>
-        {data.release ? (
-          <ReleaseForm
-            key={data.release.revision}
-            buildId={data.release.buildId}
-            percent={data.release.percent}
-            allowUserIds={data.release.allowUserIds}
-            steps={data.release.steps}
-            holders={data.holders}
-            eligibleHolders={data.release.eligibleHolders}
-            holderCount={data.holders.length}
-          />
-        ) : (
-          <p className="text-sm leading-6 text-muted">No se pudo leer la versión de este build.</p>
-        )}
-      </div>
-
-      <div className="flex flex-col gap-3">
         <h2 className="section-title">Módulos</h2>
+        <div className="flex flex-col gap-3 border-t border-line pt-4">
+          <h3 className="text-base font-medium text-ink">Qué es un canary release</h3>
+          <p className="text-sm leading-6 text-muted">
+            Una función nueva no llega a todos a la vez. Como el canario de las minas, unos pocos
+            la prueban primero y avisan si algo va mal.
+          </p>
+          <ol className="flex flex-col gap-3">
+            {CANARY_STEPS.map((step, index) => (
+              <li key={step.stage} className="flex gap-3">
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-medium text-on-accent">
+                  {index + 1}
+                </span>
+                <p className="text-sm leading-6 text-muted">
+                  <span className="font-medium text-ink">{step.stage}.</span> {step.text}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </div>
         <p className="text-sm leading-6 text-muted">
-          Marca personas y activa o desactiva el módulo. Solo cambia quien marcas.
+          Marca personas y activa o desactiva el módulo. Solo cambia quien marcas, y le llega
+          un aviso a sus dispositivos. La barra muestra quién lo tiene.
         </p>
         {data.modules ? (
           MODULE_KEYS.map((key) => (
@@ -111,29 +128,16 @@ async function loadConfiguration(): Promise<{
   displayName: string;
   people: DirectoryPerson[];
   holders: DirectoryPerson[];
-  release: {
-    revision: string;
-    buildId: string;
-    percent: number;
-    allowUserIds: string[];
-    steps: { at: string; percent: number }[];
-    eligibleHolders: number;
-  } | null;
   modules: Map<string, ModuleState> | null;
 } | null> {
   try {
     await connectDb();
-    const [displayName, people, release] = await Promise.all([
-      platformDisplayName(),
-      listPeople(),
-      readCurrentRelease(),
-    ]);
+    const [displayName, people] = await Promise.all([platformDisplayName(), listPeople()]);
     const holders = people.filter((person) => person.role === ROLE_CUENTAHABIENTE);
     return {
       displayName,
       people,
       holders,
-      release: release ? presentRelease(release, holders.map((holder) => holder.id)) : null,
       modules: await loadModules(holders.map((holder) => holder.id)),
     };
   } catch (error) {
@@ -149,28 +153,4 @@ async function loadModules(holderIds: string[]) {
     console.error(error);
     return null;
   }
-}
-
-function presentRelease(release: StoredRelease, holderIds: string[]) {
-  const steps = release.steps.map((step) => ({
-    at: step.at.toISOString(),
-    percent: step.percent,
-  }));
-  return {
-    revision: `${release.buildId}:${release.percent}:${release.allowUserIds.join(",")}:${steps.map((step) => `${step.at}:${step.percent}`).join("|")}`,
-    buildId: release.buildId,
-    percent: release.percent,
-    allowUserIds: release.allowUserIds,
-    steps,
-    eligibleHolders: eligibleHolderCount(
-      holderIds,
-      {
-        releaseId: release.buildId,
-        percent: release.percent,
-        steps: release.steps,
-        allowUserIds: release.allowUserIds,
-      },
-      new Date(),
-    ),
-  };
 }
