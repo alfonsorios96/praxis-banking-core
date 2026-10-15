@@ -63,7 +63,7 @@ export function ReleaseForm({
   return (
     <form action={action} className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
-        <p className="font-mono text-sm break-all text-ink">{buildId}</p>
+        <p className="text-sm break-all text-muted">{buildId}</p>
         <p className="text-sm leading-6 text-muted">
           {holderCount === 0
             ? "Todavía no hay cuentahabientes."
@@ -85,7 +85,7 @@ export function ReleaseForm({
           step={1}
           required
           defaultValue={percent}
-          className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base text-ink outline-none focus:border-accent"
+          className="field"
         />
       </div>
 
@@ -100,7 +100,7 @@ export function ReleaseForm({
           <ul className="flex flex-col gap-2">
             {holders.map((holder) => (
               <li key={holder.id}>
-                <label className="flex min-h-12 items-center gap-3 rounded-2xl border border-line bg-white/70 px-4">
+                <label className="flex min-h-12 items-center gap-3 border-t border-line py-3">
                   <input
                     type="checkbox"
                     name="allowUserIds"
@@ -129,7 +129,7 @@ export function ReleaseForm({
           Cuando llega la fecha, el porcentaje no baja de ese valor.
         </p>
         {drafts.map((draft, index) => (
-          <div key={index} className="flex flex-col gap-2 rounded-2xl border border-line bg-white/70 p-3">
+          <div key={index} className="flex flex-col gap-3 border-t border-line py-4">
             <label className="flex flex-col gap-2 text-sm font-medium text-ink">
               Fecha
               <input
@@ -141,7 +141,7 @@ export function ReleaseForm({
                     current.map((item, itemIndex) => (itemIndex === index ? { ...item, at } : item)),
                   );
                 }}
-                className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base font-normal text-ink outline-none focus:border-accent"
+                className="field font-normal"
               />
             </label>
             <label className="flex flex-col gap-2 text-sm font-medium text-ink">
@@ -161,7 +161,7 @@ export function ReleaseForm({
                     ),
                   );
                 }}
-                className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base font-normal text-ink outline-none focus:border-accent"
+                className="field font-normal"
               />
             </label>
             <button
@@ -169,7 +169,7 @@ export function ReleaseForm({
               onClick={() => {
                 setDrafts((current) => current.filter((_, itemIndex) => itemIndex !== index));
               }}
-              className="min-h-11 text-sm font-medium text-accent"
+              className="btn-quiet self-start"
             >
               Quitar
             </button>
@@ -178,7 +178,7 @@ export function ReleaseForm({
         <button
           type="button"
           onClick={() => setDrafts((current) => [...current, { at: "", percent: "" }])}
-          className="min-h-12 rounded-2xl border border-line bg-white px-4 text-sm font-medium text-ink"
+          className="btn-secondary"
         >
           Añadir escalón
         </button>
@@ -187,22 +187,18 @@ export function ReleaseForm({
       <input type="hidden" name="steps" value={stepsValue} />
 
       {state?.error ? (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="error" role="alert">
           {state.error}
         </p>
       ) : null}
       {state?.message ? (
-        <p className="text-sm text-accent" role="status">
+        <p className="status" role="status">
           {state.message}
         </p>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
-      >
-        {pending ? "Guardando…" : "Guardar release"}
+      <button type="submit" disabled={pending} className="btn-primary">
+        {pending ? "Guardando…" : "Guardar versión"}
       </button>
     </form>
   );

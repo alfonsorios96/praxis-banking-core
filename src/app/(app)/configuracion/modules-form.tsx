@@ -24,7 +24,7 @@ export function ModulesForm({
   const active = holders.filter((holder) => holder.enabled).length;
 
   return (
-    <form action={action} className="flex flex-col gap-3 rounded-2xl border border-line bg-white/70 p-4">
+    <form action={action} className="flex flex-col gap-3 border-t border-line pt-4">
       <input type="hidden" name="module" value={moduleKey} />
       <div className="flex items-baseline justify-between gap-3">
         <h3 className="text-base font-medium text-ink">{label}</h3>
@@ -36,13 +36,10 @@ export function ModulesForm({
       {holders.length === 0 ? (
         <p className="text-sm text-muted">No hay cuentahabientes.</p>
       ) : (
-        <fieldset className="flex flex-col gap-2">
+        <fieldset className="divide-y divide-line border-t border-line">
           <legend className="sr-only">Cuentahabientes para {label}</legend>
           {holders.map((holder) => (
-            <label
-              key={holder.id}
-              className="flex min-h-12 items-center gap-3 rounded-2xl border border-line bg-white px-4"
-            >
+            <label key={holder.id} className="flex min-h-12 items-center gap-3 py-3">
               <input
                 type="checkbox"
                 name="userIds"
@@ -57,11 +54,7 @@ export function ModulesForm({
                   <span className="block truncate text-sm text-muted">{holder.username}</span>
                 ) : null}
               </span>
-              <span
-                className={`shrink-0 text-[10px] tracking-[0.14em] uppercase ${
-                  holder.enabled ? "text-accent" : "text-muted"
-                }`}
-              >
+              <span className={`shrink-0 text-sm ${holder.enabled ? "text-accent" : "text-muted"}`}>
                 {holder.enabled ? "Activo" : "Apagado"}
               </span>
             </label>
@@ -70,12 +63,12 @@ export function ModulesForm({
       )}
 
       {state?.error ? (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="error" role="alert">
           {state.error}
         </p>
       ) : null}
       {state?.message ? (
-        <p className="text-sm text-accent" role="status">
+        <p className="status" role="status">
           {state.message}
         </p>
       ) : null}
@@ -86,7 +79,7 @@ export function ModulesForm({
           name="intent"
           value="enable"
           disabled={pending || holders.length === 0}
-          className="min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
+          className="btn-primary"
         >
           Activar
         </button>
@@ -95,7 +88,7 @@ export function ModulesForm({
           name="intent"
           value="disable"
           disabled={pending || holders.length === 0}
-          className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base font-medium text-ink disabled:opacity-60"
+          className="btn-secondary"
         >
           Desactivar
         </button>

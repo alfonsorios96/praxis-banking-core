@@ -16,7 +16,7 @@ export function TransferForm({
   if (state?.step === "review" && state.draft) {
     const draft = state.draft;
     return (
-      <form action={action} className="flex flex-col gap-4">
+      <form action={action} className="flex flex-col gap-5">
         <input type="hidden" name="confirm" value="yes" />
         <input type="hidden" name="fromAccountId" value={draft.fromAccountId} />
         <input type="hidden" name="recipientUserId" value={draft.recipientUserId} />
@@ -28,38 +28,29 @@ export function TransferForm({
         <input type="hidden" name="recipientLabel" value={draft.recipientLabel} />
         <input type="hidden" name="toIban" value={draft.toIban} />
         <input type="hidden" name="amountLabel" value={draft.amountLabel} />
-        <div className="rounded-2xl border border-line bg-white/70 px-4 py-4">
+        <div>
+          <p className="text-sm text-muted">Vas a transferir</p>
+          <p className="amount mt-1">{draft.amountLabel}</p>
+        </div>
+        <div className="border-t border-line pt-4">
           <p className="text-sm text-muted">Desde {draft.fromLabel}</p>
-          <p className="text-sm break-all text-ink">{draft.fromIban}</p>
-          <p className="mt-3 text-base text-ink">Para {draft.recipientLabel}</p>
-          <p className="text-sm break-all text-ink">{draft.toIban}</p>
-          <p className="mt-3 font-display text-4xl tracking-tight text-ink">{draft.amountLabel}</p>
+          <p className="text-sm break-all text-ink tabular-nums">{draft.fromIban}</p>
+          <p className="mt-4 text-sm text-muted">Para {draft.recipientLabel}</p>
+          <p className="text-sm break-all text-ink tabular-nums">{draft.toIban}</p>
         </div>
         {state.error ? (
-          <p className="text-sm text-red-700" role="alert">
+          <p className="error" role="alert">
             {state.error}
           </p>
         ) : (
           <p className="text-sm leading-6 text-muted">
-            Al confirmar, el ledger debita tu IBAN y abona el IBAN de la corriente del destinatario.
+            Al confirmar, el dinero sale de tu cuenta y entra en la corriente de destino.
           </p>
         )}
-        <button
-          type="submit"
-          name="intent"
-          value="confirm"
-          disabled={pending}
-          className="min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
-        >
+        <button type="submit" name="intent" value="confirm" disabled={pending} className="btn-primary">
           {pending ? "Confirmando…" : "Confirmar"}
         </button>
-        <button
-          type="submit"
-          name="intent"
-          value="edit"
-          disabled={pending}
-          className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base font-medium text-ink disabled:opacity-60"
-        >
+        <button type="submit" name="intent" value="edit" disabled={pending} className="btn-secondary">
           Corregir
         </button>
       </form>
@@ -73,35 +64,34 @@ export function TransferForm({
   ].join("|");
 
   return (
-    <form key={draftKey} action={action} className="flex flex-col gap-4">
+    <form key={draftKey} action={action} className="flex flex-col gap-5">
       <fieldset className="flex flex-col gap-2">
         <legend className="text-sm font-medium text-ink">Desde</legend>
-        {accounts.map((account) => (
-          <label
-            key={account.id}
-            className="flex min-h-12 items-center gap-3 rounded-2xl border border-line bg-white px-4"
-          >
-            <input
-              type="radio"
-              name="fromAccountId"
-              value={account.id}
-              required
-              defaultChecked={
-                state?.values?.fromAccountId
-                  ? state.values.fromAccountId === account.id
-                  : account.kind === "checking"
-              }
-              className="size-4 accent-[var(--color-accent)]"
-            />
-            <span className="flex min-w-0 flex-1 flex-col gap-1 text-base text-ink">
-              <span className="flex items-baseline justify-between gap-3">
-                <span>{account.label}</span>
-                <span className="text-sm text-muted">{account.balanceLabel}</span>
+        <div className="divide-y divide-line border-t border-line">
+          {accounts.map((account) => (
+            <label key={account.id} className="flex min-h-12 items-center gap-3 py-3">
+              <input
+                type="radio"
+                name="fromAccountId"
+                value={account.id}
+                required
+                defaultChecked={
+                  state?.values?.fromAccountId
+                    ? state.values.fromAccountId === account.id
+                    : account.kind === "checking"
+                }
+                className="size-4 accent-accent"
+              />
+              <span className="flex min-w-0 flex-1 flex-col gap-1 text-base text-ink">
+                <span className="flex items-baseline justify-between gap-3">
+                  <span>{account.label}</span>
+                  <span className="text-sm text-muted tabular-nums">{account.balanceLabel}</span>
+                </span>
+                <span className="text-sm break-all text-muted tabular-nums">{account.ibanLabel}</span>
               </span>
-              <span className="text-xs break-all text-muted">{account.ibanLabel}</span>
-            </span>
-          </label>
-        ))}
+            </label>
+          ))}
+        </div>
       </fieldset>
 
       <div className="flex flex-col gap-2">
@@ -113,7 +103,7 @@ export function TransferForm({
           name="recipientUserId"
           required
           defaultValue={state?.values?.recipientUserId ?? ""}
-          className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base text-ink outline-none focus:border-accent"
+          className="field"
         >
           <option value="" disabled>
             Elige un cuentahabiente
@@ -138,23 +128,17 @@ export function TransferForm({
           required
           placeholder="0,00"
           defaultValue={state?.values?.amount ?? ""}
-          className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base text-ink outline-none focus:border-accent"
+          className="field tabular-nums"
         />
       </div>
 
       {state?.error ? (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="error" role="alert">
           {state.error}
         </p>
       ) : null}
 
-      <button
-        type="submit"
-        name="intent"
-        value="review"
-        disabled={pending}
-        className="min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
-      >
+      <button type="submit" name="intent" value="review" disabled={pending} className="btn-primary">
         {pending ? "Revisando…" : "Revisar"}
       </button>
     </form>

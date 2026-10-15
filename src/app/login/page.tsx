@@ -16,11 +16,9 @@ export default async function LoginPage({
   return (
     <PhoneFrame>
       <section className="flex flex-col gap-8 pt-8">
-        <div className="flex flex-col gap-3">
-          <p className="font-display text-5xl tracking-tight text-ink">Praxis</p>
-          <p className="max-w-xs text-base leading-7 text-muted">
-            Core bancario. Entra con el usuario de acceso. No hay registro público.
-          </p>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-medium tracking-tight text-ink">Praxis</h1>
+          <p className="text-base leading-6 text-muted">Entra con tu usuario.</p>
         </div>
         <LoginForm from={from} />
       </section>

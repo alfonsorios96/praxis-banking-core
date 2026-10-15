@@ -19,24 +19,20 @@ export function SettingsForm({ displayName }: { displayName: string }) {
           minLength={2}
           maxLength={40}
           defaultValue={displayName}
-          className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base text-ink outline-none focus:border-accent"
+          className="field"
         />
       </div>
       {state?.error ? (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="error" role="alert">
           {state.error}
         </p>
       ) : null}
       {state?.message ? (
-        <p className="text-sm text-accent" role="status">
+        <p className="status" role="status">
           {state.message}
         </p>
       ) : null}
-      <button
-        type="submit"
-        disabled={pending}
-        className="min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
-      >
+      <button type="submit" disabled={pending} className="btn-primary">
         {pending ? "Guardando…" : "Guardar"}
       </button>
     </form>

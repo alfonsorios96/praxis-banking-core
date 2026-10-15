@@ -1,8 +1,8 @@
 # Constitución de Praxis
 
-**Versión:** 2.5.0  
+**Versión:** 2.6.0  
 **Ratificada:** 2026-10-09  
-**Enmendada:** 2026-10-13 ([ADR 0012](./decisions/0012-modulos-por-persona.md))  
+**Enmendada:** 2026-10-14 ([ADR 0013](./decisions/0013-color-de-tema.md))  
 **Alcance:** Toda decisión, especificación, agente y línea de código de este repositorio.
 
 Esta constitución es la norma de mayor rango del proyecto. Ninguna especificación, ADR, prompt de agente ni implementación puede contradecirla. Si hay conflicto, se corrige el artefacto inferior o se enmienda esta constitución mediante una decisión ratificada en `docs/decisions/`.
@@ -151,3 +151,4 @@ Sin ADR, no hay enmienda.
 | [0010](./decisions/0010-iban-y-euro.md) | IBAN español y euro |
 | [0011](./decisions/0011-notificaciones-push.md) | Notificaciones push al recibir una transferencia |
 | [0012](./decisions/0012-modulos-por-persona.md) | Módulos por persona |
+| [0013](./decisions/0013-color-de-tema.md) | Color de tema de la PWA |

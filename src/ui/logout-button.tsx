@@ -12,7 +12,7 @@ export function LogoutButton() {
       <input ref={tokenInput} type="hidden" name="deviceToken" defaultValue="" />
       <button
         type="submit"
-        className="min-h-11 px-2 text-sm font-medium text-accent"
+        className="btn-quiet"
         onClick={() => {
           if (tokenInput.current) {
             tokenInput.current.value = readDeviceToken();

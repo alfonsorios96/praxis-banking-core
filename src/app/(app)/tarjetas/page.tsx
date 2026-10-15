@@ -9,7 +9,7 @@ export default async function TarjetasPage() {
   return (
     <PendingSpec
       title="Tarjetas"
-      body="Aquí vivirán el plástico, su estado y sus límites. Una tarjeta no autoriza cargos por sí sola."
+      body="Todavía no puedes ver ni usar tarjetas."
     />
   );
 }

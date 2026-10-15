@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #e6e1d6;
-  --foreground: #142421;
-  --paper: #f6f3ec;
-  --ink: #142421;
-  --muted: #5c675f;
-  --line: #ddd4c4;
-  --accent: #1f4f46;
-  --gold: #a68456;
+  --background: #d7e0ea;
+  --foreground: #121a24;
+  --paper: #f4f7fb;
+  --ink: #121a24;
+  --muted: #5c6b7c;
+  --line: #e1e7ef;
+  --accent: #1d4e89;
+  --on-accent: #ffffff;
+  --danger: #9f2d2d;
   color-scheme: light;
 }
 
@@ -20,13 +21,66 @@
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-accent: var(--accent);
-  --color-gold: var(--gold);
-  --font-sans: var(--font-outfit);
-  --font-display: var(--font-fraunces);
+  --color-on-accent: var(--on-accent);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-schibsted);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-outfit), sans-serif;
+  font-family: var(--font-sans), sans-serif;
+}
+
+@layer components {
+  .screen-title {
+    @apply text-2xl font-medium tracking-tight text-ink;
+  }
+
+  .section-title {
+    @apply text-xl font-medium tracking-tight text-ink;
+  }
+
+  .amount {
+    @apply text-5xl font-medium tracking-tight text-ink tabular-nums;
+  }
+
+  .amount-secondary {
+    @apply text-2xl font-medium tracking-tight text-ink tabular-nums;
+  }
+
+  .field {
+    @apply min-h-12 w-full rounded-xl border border-line bg-white px-4 text-base text-ink outline-none focus-visible:border-accent;
+  }
+
+  .btn-primary {
+    @apply inline-flex min-h-12 items-center justify-center rounded-xl bg-accent px-4 text-base font-medium text-on-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60;
+  }
+
+  .btn-secondary {
+    @apply inline-flex min-h-12 items-center justify-center rounded-xl border border-line bg-white px-4 text-base font-medium text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60;
+  }
+
+  .btn-quiet {
+    @apply inline-flex min-h-11 items-center justify-center px-2 text-sm font-medium text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60;
+  }
+
+  .error {
+    @apply text-sm text-danger;
+  }
+
+  .status {
+    @apply text-sm text-accent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

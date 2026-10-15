@@ -4,12 +4,12 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Praxis",
     short_name: "Praxis",
-    description: "Core bancario con agentes.",
+    description: "Banca en el teléfono.",
     start_url: "/",
     scope: "/",
     display: "standalone",
-    background_color: "#f6f3ec",
-    theme_color: "#1f4f46",
+    background_color: "#F4F7FB",
+    theme_color: "#1D4E89",
     lang: "es",
     icons: [
       {

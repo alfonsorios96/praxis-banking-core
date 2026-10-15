@@ -92,7 +92,7 @@ export async function updateRelease(
   }
 
   revalidatePath("/", "layout");
-  return { message: "Release actualizada." };
+  return { message: "Versión guardada." };
 }
 
 export async function acceptRelease(buildId: string): Promise<{ ok: boolean }> {

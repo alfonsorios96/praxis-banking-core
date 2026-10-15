@@ -51,5 +51,5 @@ export async function updatePlatformName(
   }
 
   revalidatePath("/", "layout");
-  return { message: "Nombre actualizado." };
+  return { message: "Nombre guardado." };
 }

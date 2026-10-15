@@ -25,3 +25,4 @@ Las decisiones aquí son **parte de la constitución** una vez ratificadas. Form
 | 0010 | Aceptada | IBAN español y euro |
 | 0011 | Aceptada | Notificaciones push al recibir una transferencia |
 | 0012 | Aceptada | Módulos por persona |
+| 0013 | Aceptada | Color de tema de la PWA |

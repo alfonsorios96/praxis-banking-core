@@ -21,8 +21,8 @@ export default async function ConfiguracionPage() {
   if (!data) {
     return (
       <section className="flex flex-col gap-3">
-        <h1 className="font-display text-4xl tracking-tight text-ink">Configuración</h1>
-        <p className="text-base leading-7 text-muted">
+        <h1 className="screen-title">Configuración</h1>
+        <p className="text-base leading-6 text-muted">
           No se pudo cargar la configuración. Revisa la conexión a MongoDB.
         </p>
       </section>
@@ -32,20 +32,14 @@ export default async function ConfiguracionPage() {
   return (
     <section className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
-        <p className="text-xs font-medium tracking-[0.18em] text-gold uppercase">
-          Administración
-        </p>
-        <h1 className="font-display text-4xl tracking-tight text-ink">Configuración</h1>
-        <p className="text-base leading-7 text-muted">
-          El nombre visible aparece en la cabecera. Aquí también se abre la versión
-          actual: por porcentaje, por fecha o para cuentahabientes concretos.
-        </p>
+        <h1 className="screen-title">Configuración</h1>
+        <p className="text-base leading-6 text-muted">El nombre aparece en la cabecera.</p>
       </div>
 
       <SettingsForm displayName={data.displayName} />
 
       <div className="flex flex-col gap-3">
-        <h2 className="font-display text-3xl tracking-tight text-ink">Versión</h2>
+        <h2 className="section-title">Versión</h2>
         {data.release ? (
           <ReleaseForm
             key={data.release.revision}
@@ -58,17 +52,14 @@ export default async function ConfiguracionPage() {
             holderCount={data.holders.length}
           />
         ) : (
-          <p className="text-sm leading-6 text-muted">
-            No se pudo leer la release de este build.
-          </p>
+          <p className="text-sm leading-6 text-muted">No se pudo leer la versión de este build.</p>
         )}
       </div>
 
       <div className="flex flex-col gap-3">
-        <h2 className="font-display text-3xl tracking-tight text-ink">Módulos</h2>
+        <h2 className="section-title">Módulos</h2>
         <p className="text-sm leading-6 text-muted">
-          Marca personas y activa o desactiva el módulo. Solo cambia quien marcas, y le llega
-          un aviso a sus dispositivos.
+          Marca personas y activa o desactiva el módulo. Solo cambia quien marcas.
         </p>
         {data.modules ? (
           MODULE_KEYS.map((key) => (
@@ -90,27 +81,22 @@ export default async function ConfiguracionPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <h2 className="text-sm font-medium text-ink">Personas</h2>
+        <h2 className="section-title">Personas</h2>
         {data.people.length === 0 ? (
           <p className="text-sm leading-6 text-muted">Todavía no hay personas.</p>
         ) : (
-          <ul className="flex flex-col gap-3">
+          <ul className="divide-y divide-line border-t border-line">
             {data.people.map((person) => {
               const title = person.fullName || person.username;
               return (
-                <li
-                  key={person.username}
-                  className="flex items-center justify-between gap-3 rounded-2xl border border-line bg-white/70 px-4 py-3"
-                >
+                <li key={person.username} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-ink">{title}</p>
+                    <p className="truncate text-base text-ink">{title}</p>
                     {person.fullName ? (
                       <p className="truncate text-sm text-muted">{person.username}</p>
                     ) : null}
                   </div>
-                  <p className="shrink-0 text-[10px] tracking-[0.14em] text-gold uppercase">
-                    {roleLabel(person.role)}
-                  </p>
+                  <p className="shrink-0 text-sm text-muted">{roleLabel(person.role)}</p>
                 </li>
               );
             })}

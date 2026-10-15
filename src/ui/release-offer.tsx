@@ -98,31 +98,21 @@ export function ReleaseOffer({ buildId }: { buildId: string }) {
   }
 
   return (
-    <section className="mb-6 rounded-2xl border border-line bg-white/70 px-4 py-4">
-      <h2 className="text-sm font-medium text-ink">Hay una versión más reciente</h2>
-      <p className="mt-1 text-sm leading-6 text-muted">
+    <section className="mb-6 flex flex-col gap-3 border-b border-line pb-4">
+      <h2 className="text-base font-medium text-ink">Hay una versión más reciente</h2>
+      <p className="text-sm leading-6 text-muted">
         Puedes cargarla ahora. Si esperas, el siguiente refresh la aplica.
       </p>
       {error ? (
-        <p className="mt-2 text-sm text-red-700" role="alert">
-          {error}
+        <p className="error" role="alert">
+          {error} Vuelve a intentarlo.
         </p>
       ) : null}
-      <div className="mt-3 flex flex-col gap-2">
-        <button
-          type="button"
-          onClick={() => void loadNow()}
-          disabled={pending}
-          className="min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
-        >
+      <div className="flex flex-col gap-2">
+        <button type="button" onClick={() => void loadNow()} disabled={pending} className="btn-primary">
           {pending ? "Cargando…" : "Cargar ahora"}
         </button>
-        <button
-          type="button"
-          onClick={dismiss}
-          disabled={pending}
-          className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base font-medium text-ink disabled:opacity-60"
-        >
+        <button type="button" onClick={dismiss} disabled={pending} className="btn-secondary">
           Ahora no
         </button>
       </div>

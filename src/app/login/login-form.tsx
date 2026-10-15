@@ -18,10 +18,10 @@ export function LoginForm({ from }: { from?: string }) {
           name="username"
           autoComplete="username"
           required
-          className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base text-ink outline-none focus:border-accent"
+          className="field"
         />
         {state?.errors?.username ? (
-          <p className="text-sm text-red-700">{state.errors.username[0]}</p>
+          <p className="error">{state.errors.username[0]}</p>
         ) : null}
       </div>
 
@@ -35,24 +35,20 @@ export function LoginForm({ from }: { from?: string }) {
           type="password"
           autoComplete="current-password"
           required
-          className="min-h-12 rounded-2xl border border-line bg-white px-4 text-base text-ink outline-none focus:border-accent"
+          className="field"
         />
         {state?.errors?.password ? (
-          <p className="text-sm text-red-700">{state.errors.password[0]}</p>
+          <p className="error">{state.errors.password[0]}</p>
         ) : null}
       </div>
 
       {state?.message ? (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="error" role="alert">
           {state.message}
         </p>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="mt-2 min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
-      >
+      <button type="submit" disabled={pending} className="btn-primary mt-2">
         {pending ? "Entrando…" : "Entrar"}
       </button>
     </form>

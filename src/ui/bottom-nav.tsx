@@ -51,15 +51,12 @@ export function BottomNav({ role, hidden }: { role: UserRole; hidden: readonly s
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-14 flex-col items-center justify-center gap-1 px-1 text-[10px] leading-none tracking-tight ${
+                className={`flex min-h-14 flex-col items-center justify-center gap-1 px-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                   active ? "text-accent" : "text-muted"
                 }`}
               >
                 <Icon strokeWidth={1.75} className="size-5" aria-hidden />
                 <span>{labelForPath(href)}</span>
-                <span
-                  className={`h-0.5 w-4 rounded-full ${active ? "bg-gold" : "bg-transparent"}`}
-                />
               </Link>
             </li>
           );

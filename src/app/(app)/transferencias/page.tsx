@@ -19,8 +19,8 @@ export default async function TransferenciasPage({
   if (!data) {
     return (
       <section className="flex flex-col gap-3">
-        <h1 className="font-display text-4xl tracking-tight text-ink">Transferencias</h1>
-        <p className="text-base leading-7 text-muted">
+        <h1 className="screen-title">Transferencias</h1>
+        <p className="text-base leading-6 text-muted">
           No se pudieron cargar las transferencias. Revisa la conexión a MongoDB.
         </p>
       </section>
@@ -30,35 +30,32 @@ export default async function TransferenciasPage({
   return (
     <section className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-4xl tracking-tight text-ink">Transferencias</h1>
-        <p className="text-base leading-7 text-muted">
-          El dinero sale de un IBAN tuyo y entra al IBAN de la corriente de otro cuentahabiente.
-          Nada se mueve hasta que confirmas.
-        </p>
+        <h1 className="screen-title">Transferencias</h1>
+        <p className="text-base leading-6 text-muted">Nada se mueve hasta que confirmas.</p>
       </div>
       {hecha === "1" ? (
-        <p className="text-sm text-accent" role="status">
-          La transferencia quedó hecha.
+        <p className="status" role="status">
+          Transferencia confirmada.
         </p>
       ) : null}
       {data.accounts.length === 0 ? (
-        <p className="text-base leading-7 text-muted">Todavía no hay cuentas abiertas a tu nombre.</p>
+        <p className="text-base leading-6 text-muted">Todavía no hay cuentas abiertas a tu nombre.</p>
       ) : data.recipients.length === 0 ? (
-        <p className="text-base leading-7 text-muted">No hay otro cuentahabiente para transferir.</p>
+        <p className="text-base leading-6 text-muted">No hay otro cuentahabiente para transferir.</p>
       ) : (
         <TransferForm accounts={data.accounts} recipients={data.recipients} />
       )}
       <div className="flex flex-col gap-3">
-        <h2 className="font-display text-2xl tracking-tight text-ink">Movimientos</h2>
+        <h2 className="section-title">Movimientos</h2>
         {data.history.length === 0 ? (
-          <p className="text-base leading-7 text-muted">Todavía no hay transferencias.</p>
+          <p className="text-base leading-6 text-muted">Todavía no hay transferencias.</p>
         ) : (
-          <ul className="flex flex-col gap-3">
+          <ul className="divide-y divide-line border-t border-line">
             {data.history.map((row) => (
-              <li key={row.id} className="rounded-2xl border border-line bg-white/70 px-4 py-3">
+              <li key={row.id} className="py-4">
                 <p className="text-base text-ink">{row.title}</p>
                 <p className="text-sm text-muted">{row.detail}</p>
-                <p className="mt-2 font-display text-2xl tracking-tight text-ink">{row.amountLabel}</p>
+                <p className="amount-secondary mt-2">{row.amountLabel}</p>
               </li>
             ))}
           </ul>

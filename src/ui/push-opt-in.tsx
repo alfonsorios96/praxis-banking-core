@@ -86,14 +86,14 @@ export function PushOptIn({ username }: { username: string }) {
   }
 
   return (
-    <section className="flex flex-col gap-2 rounded-2xl border border-line bg-white/70 px-4 py-4">
-      <p className="text-sm font-medium text-ink">Avisos</p>
+    <section className="flex flex-col gap-3 border-t border-line pt-4">
+      <p className="text-base font-medium text-ink">Avisos</p>
       <p className="text-sm leading-6 text-muted">
         Te avisamos en este teléfono cuando recibes un traspaso o cambia un módulo.
       </p>
       {failed ? (
-        <p className="text-sm text-red-700" role="alert">
-          No se pudieron activar los avisos.
+        <p className="error" role="alert">
+          No se pudieron activar los avisos. Vuelve a intentarlo.
         </p>
       ) : null}
       <button
@@ -102,7 +102,7 @@ export function PushOptIn({ username }: { username: string }) {
         onClick={() => {
           void enable();
         }}
-        className="min-h-12 rounded-2xl bg-accent px-4 text-base font-medium text-paper disabled:opacity-60"
+        className="btn-secondary"
       >
         {pending ? "Activando…" : "Activar avisos"}
       </button>
