@@ -93,11 +93,28 @@ La escribe Configuración. No guarda dinero. Sin fila, o sin campo, el módulo e
 | transfers | boolean | Transferencias. |
 | createdAt / updatedAt | date | `timestamps` de Mongoose. |
 
+## `cards` (implementada)
+
+La crea el arranque, una por cuenta corriente o de ahorro. Solo el titular cambia el estado. No guarda el número completo ni el CVV ([ADR 0015](../decisions/0015-tarjetas-de-debito-simuladas.md)).
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| ownerId | string | Id del cuentahabiente. |
+| accountId | string | Único. Cuenta vinculada. |
+| kind | `"checking"` \| `"savings"` | Clase de la cuenta vinculada. |
+| brand | `"visa"` | Marca mostrada. |
+| last4 | string | 4 dígitos del número de prueba. |
+| expMonth / expYear | number | Caducidad. |
+| status | `"active"` \| `"frozen"` \| `"cancelled"` | Por defecto `active`. |
+| limitMinor | number | Límite diario en céntimos, entero. Informativo. |
+| createdAt / updatedAt | date | `timestamps` de Mongoose. |
+
+Índice único en `accountId`. Índice en `ownerId`.
+
 ## Colecciones futuras
 
 No se crean modelos ni índices hasta la spec que las introduzca.
 
 | Colección | Dueño | Contenido previsto |
 | --- | --- | --- |
-| `cards` | cards | Tarjeta, cuenta, últimos 4, estado, límite en céntimos. |
 | `payments` | payments | Propuesta de pago e `idempotencyKey`. |

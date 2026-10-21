@@ -1,8 +1,8 @@
 # Constitución de Praxis
 
-**Versión:** 3.0.0  
+**Versión:** 3.1.0  
 **Ratificada:** 2026-10-09  
-**Enmendada:** 2026-10-15 ([ADR 0014](./decisions/0014-canary-por-modulos.md))  
+**Enmendada:** 2026-10-21 ([ADR 0015](./decisions/0015-tarjetas-de-debito-simuladas.md))  
 **Alcance:** Toda decisión, especificación, agente y línea de código de este repositorio.
 
 Esta constitución es la norma de mayor rango del proyecto. Ninguna especificación, ADR, prompt de agente ni implementación puede contradecirla. Si hay conflicto, se corrige el artefacto inferior o se enmienda esta constitución mediante una decisión ratificada en `docs/decisions/`.
@@ -15,7 +15,7 @@ Praxis es un harness de agentes cuya misión es **automatizar y ayudar las opera
 
 Los agentes no sustituyen al titular ni al control del banco: **proponen, estructuran, contrastan y documentan**. Cualquier efecto sobre un saldo exige confirmación explícita del titular. Toda cifra de dinero debe ser trazable hasta un asiento.
 
-Esta versión autentica, navega y abre para cada cuentahabiente una cuenta corriente y una de ahorro, cada una con su IBAN en euros. Un traspaso interno mueve dinero solo después de la confirmación del titular, mediante un asiento del ledger. No emite tarjetas ni pagos.
+Esta versión autentica, navega y abre para cada cuentahabiente una cuenta corriente y una de ahorro, cada una con su IBAN en euros. Un traspaso interno mueve dinero solo después de la confirmación del titular, mediante un asiento del ledger. Cada cuenta tiene una tarjeta de débito simulada que el titular puede congelar ([ADR 0015](./decisions/0015-tarjetas-de-debito-simuladas.md)). No hace pagos ni cargos con tarjeta.
 
 ---
 
@@ -153,3 +153,4 @@ Sin ADR, no hay enmienda.
 | [0012](./decisions/0012-modulos-por-persona.md) | Módulos por persona |
 | [0013](./decisions/0013-color-de-tema.md) | Color de tema de la PWA |
 | [0014](./decisions/0014-canary-por-modulos.md) | Canary release con los módulos |
+| [0015](./decisions/0015-tarjetas-de-debito-simuladas.md) | Tarjetas de débito simuladas |

@@ -27,3 +27,4 @@ Las decisiones aquí son **parte de la constitución** una vez ratificadas. Form
 | 0012 | Aceptada | Módulos por persona |
 | 0013 | Aceptada | Color de tema de la PWA |
 | 0014 | Aceptada | Canary release con los módulos |
+| 0015 | Aceptada | Tarjetas de débito simuladas |

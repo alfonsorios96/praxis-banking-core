@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { ensureHolderAccounts, migrateToEuro } from "@/accounts/ensure";
+import { ensureHolderCards } from "@/cards/ensure";
 import { DB_NAME } from "./collections";
 import { seedAccess } from "./seed";
 
@@ -21,6 +22,7 @@ function cache(): MongooseCache {
 
 let seedPromise: Promise<void> | null = null;
 let accountsPromise: Promise<void> | null = null;
+let cardsPromise: Promise<void> | null = null;
 
 function ensureSeed(): Promise<void> {
   if (!seedPromise) {
@@ -40,6 +42,16 @@ function ensureAccounts(): Promise<void> {
     });
   }
   return accountsPromise;
+}
+
+function ensureCards(): Promise<void> {
+  if (!cardsPromise) {
+    cardsPromise = ensureHolderCards().catch((error: unknown) => {
+      cardsPromise = null;
+      throw error;
+    });
+  }
+  return cardsPromise;
 }
 
 export async function connectDb(): Promise<typeof mongoose> {
@@ -63,5 +75,6 @@ export async function connectDb(): Promise<typeof mongoose> {
   await ensureSeed();
   await ensureAccounts();
   await migrateToEuro();
+  await ensureCards();
   return stored.conn;
 }

@@ -3,7 +3,7 @@ import { accessCounts } from "@/db/directory";
 const MODULES = [
   { name: "Identidad", ready: true },
   { name: "Cuentas", ready: true },
-  { name: "Tarjetas", ready: false },
+  { name: "Tarjetas", ready: true },
   { name: "Transferencias", ready: true },
   { name: "Pagos", ready: false },
   { name: "Ledger", ready: true },
