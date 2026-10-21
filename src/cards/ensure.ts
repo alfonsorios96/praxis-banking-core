@@ -2,8 +2,17 @@ import "server-only";
 
 import { isDuplicateKey } from "@/db/duplicate";
 import { AccountModel } from "@/db/models/account";
-import { CardModel } from "@/db/models/card";
+import { CardModel, LEGACY_ACCOUNT_INDEX } from "@/db/models/card";
 import { CARD_KINDS, cardExpiry, cardNumber, DAILY_LIMIT_CENTS } from "./mock";
+
+export async function migrateCardMedium(): Promise<void> {
+  await CardModel.updateMany({ medium: { $exists: false } }, { $set: { medium: "plastic" } });
+  const indexes: { name?: string }[] = await CardModel.collection.indexes().catch(() => []);
+  if (indexes.some((index) => index.name === LEGACY_ACCOUNT_INDEX)) {
+    await CardModel.collection.dropIndex(LEGACY_ACCOUNT_INDEX);
+  }
+  await CardModel.createIndexes();
+}
 
 export async function ensureHolderCards(ownerId?: string): Promise<void> {
   const accounts = await AccountModel.find({
@@ -18,6 +27,7 @@ export async function ensureHolderCards(ownerId?: string): Promise<void> {
 
   const existing = await CardModel.find({
     accountId: { $in: accounts.map((account) => String(account._id)) },
+    medium: "plastic",
   })
     .select("accountId")
     .lean();
@@ -35,6 +45,7 @@ export async function ensureHolderCards(ownerId?: string): Promise<void> {
       await CardModel.create({
         ownerId: String(account.ownerId),
         accountId,
+        medium: "plastic",
         kind,
         brand: "visa",
         last4: cardNumber(accountId).slice(-4),

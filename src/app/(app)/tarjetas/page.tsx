@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { requireModule } from "@/auth/guard";
 import { listOwnedCards, type OwnedCard } from "@/cards/queries";
 import { CardCarousel } from "@/ui/card-carousel";
+import { DigitalCardIssuer } from "@/ui/digital-card-issuer";
 
 export const metadata: Metadata = { title: "Tarjetas" };
 
@@ -14,11 +15,14 @@ export default async function TarjetasPage() {
       <div className="flex flex-col gap-2">
         <h1 className="screen-title">Tarjetas</h1>
         <p className="text-base leading-6 text-muted">
-          Tarjetas de débito de prueba. No hacen cargos.
+          Tarjetas de prueba. No hacen cargos.
         </p>
       </div>
       {cards ? (
-        <CardCarousel cards={cards} />
+        <>
+          <CardCarousel cards={cards} />
+          <DigitalCardIssuer />
+        </>
       ) : (
         <p className="text-base leading-6 text-muted">
           No se pudieron cargar las tarjetas. Revisa la conexión a MongoDB.

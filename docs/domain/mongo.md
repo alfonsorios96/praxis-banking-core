@@ -22,6 +22,8 @@ Un documento. Lo escribe identidad. No guarda dinero.
 | --- | --- | --- |
 | key | string | Único. Valor `default`. |
 | displayName | string | 2–40. Nombre visible en la cabecera autenticada. |
+| simulateDigitalCardFaults | boolean | Por defecto `true`. Encendido, 2 de cada 5 emisiones digitales fallan ([ADR 0017](../decisions/0017-monitoring-y-emision-digital.md)). |
+| digitalIssuanceSlot | number | Entero, por defecto `0`. Cupo global de intentos con la simulación encendida. |
 | createdAt / updatedAt | date | `timestamps` de Mongoose. |
 
 ## `releases` (retirada)
@@ -95,12 +97,13 @@ La escribe Configuración. No guarda dinero. Sin fila, o sin campo, el módulo e
 
 ## `cards` (implementada)
 
-La crea el arranque, una por cuenta corriente o de ahorro. Solo el titular cambia el estado. No guarda el número completo ni el CVV ([ADR 0015](../decisions/0015-tarjetas-de-debito-simuladas.md)).
+El arranque crea un plástico por cuenta corriente o de ahorro. El titular añade tarjetas digitales a su corriente ([ADR 0017](../decisions/0017-monitoring-y-emision-digital.md)). Solo el titular cambia el estado. No guarda el número completo ni el CVV ([ADR 0015](../decisions/0015-tarjetas-de-debito-simuladas.md)).
 
 | Campo | Tipo | Notas |
 | --- | --- | --- |
 | ownerId | string | Id del cuentahabiente. |
-| accountId | string | Único. Cuenta vinculada. |
+| accountId | string | Cuenta vinculada. Única entre los plásticos. |
+| medium | `"plastic"` \| `"digital"` | Por defecto `plastic`. El arranque rellena los que no lo tienen. |
 | kind | `"checking"` \| `"savings"` | Clase de la cuenta vinculada. |
 | brand | `"visa"` | Marca mostrada. |
 | last4 | string | 4 dígitos del número de prueba. |
@@ -109,7 +112,21 @@ La crea el arranque, una por cuenta corriente o de ahorro. Solo el titular cambi
 | limitMinor | number | Límite diario en céntimos, entero. Informativo. |
 | createdAt / updatedAt | date | `timestamps` de Mongoose. |
 
-Índice único en `accountId`. Índice en `ownerId`.
+Índice único parcial en `accountId` cuando `medium` es `plastic` (`accountId_plastic`). Índice en `ownerId`. El arranque borra el índice único antiguo `accountId_1` si existe.
+
+## `incidents` (implementada)
+
+La escribe la emisión digital cuando falla a propósito. La lee Monitoring. No guarda dinero, número de tarjeta ni IBAN.
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| code | number | Código del fallo. Hoy `500`. |
+| concept | string | Concepto inventado. Hoy `emisor-virtual-no-responde`. |
+| operation | string | Operación fallida. Hoy `emitir-tarjeta-digital`. |
+| ownerId | string | Id del cuentahabiente. Monitoring no lo muestra. |
+| createdAt / updatedAt | date | `timestamps` de Mongoose. |
+
+Índice en `createdAt`.
 
 ## Colecciones futuras
 

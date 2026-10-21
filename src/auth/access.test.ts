@@ -21,9 +21,10 @@ describe("userRoleSchema", () => {
 });
 
 describe("acceso por rol", () => {
-  test("el administrador solo tiene inicio y configuración", () => {
+  test("el administrador solo tiene inicio, monitoring y configuración", () => {
     expect(pathsForRole("administrador")).toEqual(ADMIN_PATHS);
     expect(canAccessPath("administrador", "/")).toBe(true);
+    expect(canAccessPath("administrador", "/monitoreo")).toBe(true);
     expect(canAccessPath("administrador", "/configuracion")).toBe(true);
     expect(canAccessPath("administrador", "/cuentas")).toBe(false);
     expect(canAccessPath("administrador", "/tarjetas")).toBe(false);
@@ -38,6 +39,7 @@ describe("acceso por rol", () => {
     expect(canAccessPath("cuentahabiente", "/transferencias")).toBe(true);
     expect(canAccessPath("cuentahabiente", "/pagos")).toBe(true);
     expect(canAccessPath("cuentahabiente", "/configuracion")).toBe(false);
+    expect(canAccessPath("cuentahabiente", "/monitoreo")).toBe(false);
   });
 
   test("la barra omite los módulos apagados", () => {
@@ -53,6 +55,8 @@ describe("acceso por rol", () => {
   test("una ruta pedida al rol equivocado cae en inicio", () => {
     expect(landingPath("administrador", "/cuentas")).toBe("/");
     expect(landingPath("cuentahabiente", "/configuracion")).toBe("/");
+    expect(landingPath("cuentahabiente", "/monitoreo")).toBe("/");
+    expect(landingPath("administrador", "/monitoreo")).toBe("/monitoreo");
     expect(landingPath("cuentahabiente", "/tarjetas")).toBe("/tarjetas");
     expect(landingPath("administrador", "//evil.example")).toBe("/");
   });

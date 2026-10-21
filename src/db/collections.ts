@@ -9,4 +9,5 @@ export const COLLECTIONS = {
   deviceTokens: "device_tokens",
   moduleAccess: "module_access",
   cards: "cards",
+  incidents: "incidents",
 } as const;

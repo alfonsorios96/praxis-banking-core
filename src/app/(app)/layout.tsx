@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
-import { ROLE_CUENTAHABIENTE } from "@/auth/constants";
+import { ROLE_ADMINISTRADOR, ROLE_CUENTAHABIENTE } from "@/auth/constants";
 import { verifySession } from "@/auth/dal";
 import { disabledModulePaths, MODULE_KEYS, MODULE_PATH } from "@/modules/keys";
 import { readModuleState } from "@/modules/store";
 import { platformDisplayName } from "@/db/directory";
 import { DEFAULT_DISPLAY_NAME } from "@/db/models/platform-settings";
+import { AdminShell } from "@/ui/admin-shell";
 import { BottomNav } from "@/ui/bottom-nav";
 import { PhoneFrame } from "@/ui/phone-frame";
 import { AppHeader } from "./app-header";
@@ -33,6 +34,14 @@ export default async function AppLayout({
       console.error(error);
       hidden = MODULE_KEYS.map((key) => MODULE_PATH[key]);
     }
+  }
+
+  if (session.role === ROLE_ADMINISTRADOR) {
+    return (
+      <AdminShell displayName={displayName} username={session.username}>
+        {children}
+      </AdminShell>
+    );
   }
 
   return (

@@ -33,7 +33,7 @@ export default async function ConfiguracionPage() {
   if (!data) {
     return (
       <section className="flex flex-col gap-3">
-        <h1 className="screen-title">Configuración</h1>
+        <h1 className="text-3xl font-medium tracking-tight text-ink">Configuración</h1>
         <p className="text-base leading-6 text-muted">
           No se pudo cargar la configuración. Revisa la conexión a MongoDB.
         </p>
@@ -42,26 +42,27 @@ export default async function ConfiguracionPage() {
   }
 
   return (
-    <section className="flex flex-col gap-8">
-      <div className="flex flex-col gap-2">
-        <h1 className="screen-title">Configuración</h1>
+    <section className="flex flex-col gap-10">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-3xl font-medium tracking-tight text-ink">Configuración</h1>
         <p className="text-base leading-6 text-muted">
           El nombre aparece en la cabecera. Los módulos se abren a pocas personas antes que a
           todas.
         </p>
       </div>
 
-      <SettingsForm displayName={data.displayName} />
-
-      <div className="flex flex-col gap-3">
-        <h2 className="section-title">Módulos</h2>
-        <div className="flex flex-col gap-3 border-t border-line pt-4">
-          <h3 className="text-base font-medium text-ink">Qué es un canary release</h3>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-4 rounded-xl border border-line bg-white p-6">
+          <h2 className="section-title">Plataforma</h2>
+          <SettingsForm displayName={data.displayName} />
+        </div>
+        <div className="flex flex-col gap-4 rounded-xl border border-line bg-white p-6 lg:col-span-2">
+          <h2 className="section-title">Qué es un canary release</h2>
           <p className="text-sm leading-6 text-muted">
             Una función nueva no llega a todos a la vez. Como el canario de las minas, unos pocos
             la prueban primero y avisan si algo va mal.
           </p>
-          <ol className="flex flex-col gap-3">
+          <ol className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {CANARY_STEPS.map((step, index) => (
               <li key={step.stage} className="flex gap-3">
                 <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-medium text-on-accent">
@@ -74,50 +75,68 @@ export default async function ConfiguracionPage() {
             ))}
           </ol>
         </div>
-        <p className="text-sm leading-6 text-muted">
-          Marca personas y activa o desactiva el módulo. Solo cambia quien marcas, y le llega
-          un aviso a sus dispositivos. La barra muestra quién lo tiene.
-        </p>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="section-title">Módulos</h2>
+          <p className="text-sm leading-6 text-muted">
+            Marca personas y activa o desactiva el módulo. Solo cambia quien marcas, y le llega un
+            aviso a sus dispositivos. La barra muestra quién lo tiene.
+          </p>
+        </div>
         {data.modules ? (
-          MODULE_KEYS.map((key) => (
-            <ModulesForm
-              key={key}
-              moduleKey={key}
-              label={MODULE_LABEL[key]}
-              holders={data.holders.map((holder) => ({
-                id: holder.id,
-                username: holder.username,
-                fullName: holder.fullName,
-                enabled: data.modules?.get(holder.id)?.[key] ?? true,
-              }))}
-            />
-          ))
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+            {MODULE_KEYS.map((key) => (
+              <ModulesForm
+                key={key}
+                moduleKey={key}
+                label={MODULE_LABEL[key]}
+                holders={data.holders.map((holder) => ({
+                  id: holder.id,
+                  username: holder.username,
+                  fullName: holder.fullName,
+                  enabled: data.modules?.get(holder.id)?.[key] ?? true,
+                }))}
+              />
+            ))}
+          </div>
         ) : (
           <p className="text-sm leading-6 text-muted">No se pudieron leer los módulos.</p>
         )}
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         <h2 className="section-title">Personas</h2>
         {data.people.length === 0 ? (
           <p className="text-sm leading-6 text-muted">Todavía no hay personas.</p>
         ) : (
-          <ul className="divide-y divide-line border-t border-line">
-            {data.people.map((person) => {
-              const title = person.fullName || person.username;
-              return (
-                <li key={person.username} className="flex items-center justify-between gap-3 py-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-base text-ink">{title}</p>
-                    {person.fullName ? (
-                      <p className="truncate text-sm text-muted">{person.username}</p>
-                    ) : null}
-                  </div>
-                  <p className="shrink-0 text-sm text-muted">{roleLabel(person.role)}</p>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="overflow-hidden rounded-xl border border-line bg-white">
+            <table className="w-full text-left text-sm">
+              <thead className="text-muted">
+                <tr className="border-b border-line">
+                  <th scope="col" className="px-6 py-3 font-normal">
+                    Nombre
+                  </th>
+                  <th scope="col" className="px-6 py-3 font-normal">
+                    Usuario
+                  </th>
+                  <th scope="col" className="px-6 py-3 font-normal">
+                    Rol
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {data.people.map((person) => (
+                  <tr key={person.username}>
+                    <td className="px-6 py-3 text-ink">{person.fullName || person.username}</td>
+                    <td className="px-6 py-3 text-muted">{person.username}</td>
+                    <td className="px-6 py-3 text-muted">{roleLabel(person.role)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </section>

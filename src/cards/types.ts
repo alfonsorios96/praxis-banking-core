@@ -1,5 +1,6 @@
 export type OwnedCard = {
   id: string;
+  medium: "plastic" | "digital";
   kind: "checking" | "savings";
   accountLabel: string;
   balanceLabel: string;

@@ -29,3 +29,4 @@ Las decisiones aquí son **parte de la constitución** una vez ratificadas. Form
 | 0014 | Aceptada | Canary release con los módulos |
 | 0015 | Aceptada | Tarjetas de débito simuladas |
 | 0016 | Aceptada | Entrada como invitado |
+| 0017 | Aceptada | Monitoring y emisión digital con fallos simulados |

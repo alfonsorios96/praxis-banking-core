@@ -1,7 +1,14 @@
 "use client";
 
 import { Eye, EyeOff, Nfc, Snowflake } from "lucide-react";
-import { useActionState, useOptimistic, useRef, useState, type KeyboardEvent } from "react";
+import {
+  useActionState,
+  useEffect,
+  useOptimistic,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { setCardFrozen, type CardFreezeState } from "@/app/actions/cards";
 import type { OwnedCard } from "@/cards/types";
 
@@ -14,12 +21,42 @@ const PLASTIC: Record<OwnedCard["kind"], string> = {
   savings: "bg-[linear-gradient(135deg,#4a5d72_0%,#2b3a4b_50%,#121a24_100%)]",
 };
 
+const DIGITAL_SURFACE = "bg-[linear-gradient(160deg,#2f7d82_0%,#1f5c63_100%)]";
+
 const ENGRAVING =
   "bg-[repeating-radial-gradient(circle_at_115%_-20%,transparent_0,transparent_9px,rgba(255,255,255,0.07)_10px,transparent_11px)]";
+
+function surfaceOf(card: OwnedCard): string {
+  return card.medium === "digital" ? DIGITAL_SURFACE : PLASTIC[card.kind];
+}
+
+function titleOf(card: OwnedCard): string {
+  return card.medium === "digital"
+    ? `Digital ${card.accountLabel.toLowerCase()}`
+    : `Débito ${card.accountLabel.toLowerCase()}`;
+}
 
 export function CardCarousel({ cards }: { cards: OwnedCard[] }) {
   const scroller = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
+  const [seenCount, setSeenCount] = useState(cards.length);
+  if (cards.length !== seenCount) {
+    setSeenCount(cards.length);
+    if (cards.length > seenCount) {
+      setIndex(cards.length - 1);
+    }
+  }
+  useEffect(() => {
+    const first = scroller.current?.firstElementChild;
+    if (first instanceof HTMLElement && index === cards.length - 1) {
+      scroller.current?.scrollTo({
+        left: index * (first.offsetWidth + SLIDE_GAP_PX),
+        behavior: "smooth",
+      });
+    }
+    // Only follow a newly added card; manual scrolling sets the index itself.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cards.length]);
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
   const [statuses, setOptimisticStatus] = useOptimistic(
     Object.fromEntries(cards.map((card) => [card.id, card.status])) as Record<string, Status>,
@@ -90,7 +127,7 @@ export function CardCarousel({ cards }: { cards: OwnedCard[] }) {
               key={card.id}
               role="group"
               aria-roledescription="tarjeta"
-              aria-label={`${position + 1} de ${cards.length}: débito ${card.accountLabel}`}
+              aria-label={`${position + 1} de ${cards.length}: ${titleOf(card).toLowerCase()}`}
               className="w-[88%] shrink-0 snap-start"
             >
               <Plastic
@@ -109,7 +146,7 @@ export function CardCarousel({ cards }: { cards: OwnedCard[] }) {
                 key={card.id}
                 type="button"
                 onClick={() => goTo(position)}
-                aria-label={`Ver tarjeta ${card.accountLabel}`}
+                aria-label={`Ver tarjeta ${titleOf(card).toLowerCase()} ${card.last4}`}
                 aria-current={position === index}
                 className="flex size-6 items-center justify-center"
               >
@@ -125,7 +162,7 @@ export function CardCarousel({ cards }: { cards: OwnedCard[] }) {
       </div>
 
       <div className="flex flex-col">
-        <h2 className="section-title">Débito {selected.accountLabel.toLowerCase()}</h2>
+        <h2 className="section-title">{titleOf(selected)}</h2>
         <dl className="mt-3 divide-y divide-line border-y border-line">
           <div className="flex items-baseline justify-between gap-3 py-3">
             <dt className="text-sm text-muted">Cuenta vinculada</dt>
@@ -213,20 +250,26 @@ function Plastic({ card, frozen, showBack }: { card: OwnedCard; frozen: boolean;
       >
         <div
           aria-hidden={showBack}
-          className={`absolute inset-0 overflow-hidden rounded-2xl text-white shadow-[0_12px_28px_-12px_rgba(18,26,36,0.55)] backface-hidden ${PLASTIC[card.kind]} ${
+          className={`absolute inset-0 overflow-hidden rounded-2xl text-white shadow-[0_12px_28px_-12px_rgba(18,26,36,0.55)] backface-hidden ${surfaceOf(card)} ${
             frozen ? "grayscale" : ""
           }`}
         >
-          <div className={`absolute inset-0 ${ENGRAVING}`} />
+          {card.medium === "plastic" ? <div className={`absolute inset-0 ${ENGRAVING}`} /> : null}
           <div className="relative flex size-full flex-col justify-between p-5">
             <div className="flex items-start justify-between">
-              <span className="text-sm text-white/80">Débito {card.accountLabel.toLowerCase()}</span>
+              <span className="text-sm text-white/80">{titleOf(card)}</span>
               <Nfc aria-hidden className="size-6 text-white/80" />
             </div>
-            <span
-              aria-hidden
-              className="block h-8 w-11 rounded-md bg-[linear-gradient(135deg,#e9d39a,#b8954d_55%,#e2c886)] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.15)]"
-            />
+            {card.medium === "plastic" ? (
+              <span
+                aria-hidden
+                className="block h-8 w-11 rounded-md bg-[linear-gradient(135deg,#e9d39a,#b8954d_55%,#e2c886)] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.15)]"
+              />
+            ) : (
+              <span className="self-start rounded-full border border-white/40 px-2.5 py-0.5 text-xs text-white/90">
+                Solo en línea y móvil
+              </span>
+            )}
             <div className="flex items-end justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-lg tracking-[0.12em] tabular-nums">
@@ -251,7 +294,7 @@ function Plastic({ card, frozen, showBack }: { card: OwnedCard; frozen: boolean;
 
         <div
           aria-hidden={!showBack}
-          className={`absolute inset-0 rotate-y-180 overflow-hidden rounded-2xl text-white shadow-[0_12px_28px_-12px_rgba(18,26,36,0.55)] backface-hidden ${PLASTIC[card.kind]}`}
+          className={`absolute inset-0 rotate-y-180 overflow-hidden rounded-2xl text-white shadow-[0_12px_28px_-12px_rgba(18,26,36,0.55)] backface-hidden ${surfaceOf(card)}`}
         >
           <div className="mt-5 h-10 bg-[#0b1320]" />
           <div className="flex flex-col gap-3 px-5 pt-4">

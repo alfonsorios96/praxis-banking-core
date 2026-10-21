@@ -30,7 +30,7 @@ export function ModulesForm({
   const stage = rolloutStage(active, holders.length);
 
   return (
-    <form action={action} className="flex flex-col gap-3 border-t border-line pt-4">
+    <form action={action} className="flex flex-col gap-3 rounded-xl border border-line bg-white p-5">
       <input type="hidden" name="module" value={moduleKey} />
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-base font-medium text-ink">{label}</h3>

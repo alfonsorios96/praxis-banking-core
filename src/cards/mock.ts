@@ -3,6 +3,9 @@ import { createHash } from "node:crypto";
 export const CARD_KINDS = ["checking", "savings"] as const;
 export type CardKind = (typeof CARD_KINDS)[number];
 
+export const CARD_MEDIUMS = ["plastic", "digital"] as const;
+export type CardMedium = (typeof CARD_MEDIUMS)[number];
+
 export const CARD_STATUSES = ["active", "frozen", "cancelled"] as const;
 export type CardStatus = (typeof CARD_STATUSES)[number];
 

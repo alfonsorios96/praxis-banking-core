@@ -12,7 +12,7 @@ El shell tenía un único rol `user`. La operación de la plataforma y la navega
 
 Hay dos roles, y ningún otro sin enmienda:
 
-- `administrador` — Inicio (paneles de la plataforma) y Configuración.
+- `administrador` — Inicio (paneles de la plataforma) y Configuración. El [ADR 0017](./0017-monitoring-y-emision-digital.md) añade Monitoring.
 - `cuentahabiente` — Inicio, Cuentas, Tarjetas, Transferencias y Pagos.
 
 El usuario `praxis` es administrador. La semilla asegura además tres cuentahabientes (`sofia`, `diego`, `valeria`) si no existen. No hay registro público, salvo la entrada como invitado del [ADR 0016](./0016-entrada-como-invitado.md). El rol viaja en el JWT. Una ruta ajena al rol redirige a Inicio. El rol `user` deja de aceptarse.

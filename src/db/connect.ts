@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { ensureHolderAccounts, migrateToEuro } from "@/accounts/ensure";
-import { ensureHolderCards } from "@/cards/ensure";
+import { ensureHolderCards, migrateCardMedium } from "@/cards/ensure";
 import { DB_NAME } from "./collections";
 import { seedAccess } from "./seed";
 
@@ -46,10 +46,12 @@ function ensureAccounts(): Promise<void> {
 
 function ensureCards(): Promise<void> {
   if (!cardsPromise) {
-    cardsPromise = ensureHolderCards().catch((error: unknown) => {
-      cardsPromise = null;
-      throw error;
-    });
+    cardsPromise = migrateCardMedium()
+      .then(() => ensureHolderCards())
+      .catch((error: unknown) => {
+        cardsPromise = null;
+        throw error;
+      });
   }
   return cardsPromise;
 }

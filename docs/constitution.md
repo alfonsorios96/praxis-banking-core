@@ -1,8 +1,8 @@
 # Constitución de Praxis
 
-**Versión:** 4.0.0  
+**Versión:** 4.1.0  
 **Ratificada:** 2026-10-09  
-**Enmendada:** 2026-10-21 ([ADR 0016](./decisions/0016-entrada-como-invitado.md))  
+**Enmendada:** 2026-10-21 ([ADR 0017](./decisions/0017-monitoring-y-emision-digital.md))  
 **Alcance:** Toda decisión, especificación, agente y línea de código de este repositorio.
 
 Esta constitución es la norma de mayor rango del proyecto. Ninguna especificación, ADR, prompt de agente ni implementación puede contradecirla. Si hay conflicto, se corrige el artefacto inferior o se enmienda esta constitución mediante una decisión ratificada en `docs/decisions/`.
@@ -15,7 +15,7 @@ Praxis es un harness de agentes cuya misión es **automatizar y ayudar las opera
 
 Los agentes no sustituyen al titular ni al control del banco: **proponen, estructuran, contrastan y documentan**. Cualquier efecto sobre un saldo exige confirmación explícita del titular. Toda cifra de dinero debe ser trazable hasta un asiento.
 
-Esta versión autentica, navega y abre para cada cuentahabiente una cuenta corriente y una de ahorro, cada una con su IBAN en euros. Un traspaso interno mueve dinero solo después de la confirmación del titular, mediante un asiento del ledger. Cada cuenta tiene una tarjeta de débito simulada que el titular puede congelar ([ADR 0015](./decisions/0015-tarjetas-de-debito-simuladas.md)). No hace pagos ni cargos con tarjeta.
+Esta versión autentica, navega y abre para cada cuentahabiente una cuenta corriente y una de ahorro, cada una con su IBAN en euros. Un traspaso interno mueve dinero solo después de la confirmación del titular, mediante un asiento del ledger. Cada cuenta tiene una tarjeta de débito simulada que el titular puede congelar ([ADR 0015](./decisions/0015-tarjetas-de-debito-simuladas.md)). El titular puede crear tarjetas digitales simuladas; en las demos esa emisión falla a propósito y el administrador ve los fallos en Monitoring ([ADR 0017](./decisions/0017-monitoring-y-emision-digital.md)). No hace pagos ni cargos con tarjeta.
 
 ---
 
@@ -73,8 +73,8 @@ Detalle: [ADR 0001](./decisions/0001-stack-tecnologico.md), [ADR 0004](./decisio
 
 La aplicación exige identidad. Hay dos roles, y ningún otro sin enmienda:
 
-- `administrador` — Inicio (paneles de la plataforma) y Configuración. No entra a cuentas, tarjetas, transferencias ni pagos.
-- `cuentahabiente` — Inicio, Cuentas, Tarjetas, Transferencias y Pagos. No entra a Configuración.
+- `administrador` — Inicio (paneles de la plataforma), Monitoring y Configuración. No entra a cuentas, tarjetas, transferencias ni pagos.
+- `cuentahabiente` — Inicio, Cuentas, Tarjetas, Transferencias y Pagos. No entra a Monitoring ni a Configuración.
 
 El rol permite Tarjetas, Transferencias y Pagos. El administrador puede retirar cada uno de esos módulos a cuentahabientes concretos, y devolverlo, desde Configuración. Ver [ADR 0012](./decisions/0012-modulos-por-persona.md).
 
@@ -84,7 +84,9 @@ Rutas de producto y APIs de negocio son privadas. Quedan públicas `/login`, el 
 
 ### 2.8 Interfaz mobile-first
 
-La interfaz se diseña para el teléfono y se instala como PWA. En escritorio se presenta como una columna de teléfono. Objetivos táctiles grandes, barra de navegación inferior y respeto a las áreas seguras. Ver [ADR 0006](./decisions/0006-pwa-mobile-first.md).
+La interfaz del cuentahabiente se diseña para el teléfono y se instala como PWA. En escritorio se presenta como una columna de teléfono. Objetivos táctiles grandes, barra de navegación inferior y respeto a las áreas seguras. Ver [ADR 0006](./decisions/0006-pwa-mobile-first.md).
+
+La del administrador se diseña para escritorio, con navegación lateral. Ver [ADR 0017](./decisions/0017-monitoring-y-emision-digital.md).
 
 Un build nuevo llega a todos al recargar: el service worker se activa en cuanto se instala. Lo que se abre poco a poco son los módulos. Configuración explica el canary con ellos: pocas personas primero, luego más, y desactivar es revertir. Ver [ADR 0014](./decisions/0014-canary-por-modulos.md).
 
@@ -99,7 +101,7 @@ Todo agente declara: misión, entradas, salidas, herramientas permitidas y lo qu
 | Orquestador | Descompone la petición, asigna sub-agentes, consolida el resultado y pide confirmación del titular cuando la meta afecte un saldo. |
 | Identidad | Usuarios, credenciales, perfil y los roles administrador y cuentahabiente. No abre cuentas ni mueve dinero. |
 | Cuentas | Cuentas, titularidad y estado (abierta, congelada, cerrada). No muta saldos. |
-| Tarjetas | Plástico, estado y límites. No autoriza cargos. |
+| Tarjetas | Plástico, tarjetas digitales, estado y límites. No autoriza cargos. |
 | Transferencias | Propone traspasos entre cuentas. No escribe asientos. |
 | Pagos | Propone pagos a un comercio o servicio. No escribe asientos. |
 | Ledger | Única escritura de asientos. El saldo se deriva de ellos. |
@@ -155,3 +157,4 @@ Sin ADR, no hay enmienda.
 | [0014](./decisions/0014-canary-por-modulos.md) | Canary release con los módulos |
 | [0015](./decisions/0015-tarjetas-de-debito-simuladas.md) | Tarjetas de débito simuladas |
 | [0016](./decisions/0016-entrada-como-invitado.md) | Entrada como invitado |
+| [0017](./decisions/0017-monitoring-y-emision-digital.md) | Monitoring y emisión digital con fallos simulados |

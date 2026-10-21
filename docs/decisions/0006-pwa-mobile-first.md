@@ -22,5 +22,7 @@ La aplicación es web, y el uso principal es el teléfono. Debe poder instalarse
 ## Consecuencias
 
 - No se diseña primero un layout de escritorio con navegación lateral.
+
+> El [ADR 0017](./0017-monitoring-y-emision-digital.md) acota esta decisión al cuentahabiente y al login. El administrador trabaja en escritorio.
 - El worker generado no se versiona. El empaquetado usa el modo configurador de Serwist, no el plugin de webpack, porque Next.js 16 compila con Turbopack.
 - Sin HTTPS (o localhost) el navegador no ofrece instalación. El modo desarrollo no registra el worker.

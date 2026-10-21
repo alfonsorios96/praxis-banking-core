@@ -2,33 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  ArrowLeftRight,
-  CreditCard,
-  House,
-  Landmark,
-  Receipt,
-  Settings,
-  type LucideIcon,
-} from "lucide-react";
-import { labelForPath, visiblePaths, type AppPath } from "@/auth/access";
+import { labelForPath, visiblePaths } from "@/auth/access";
 import type { UserRole } from "@/domain/schemas";
-
-const ICONS: Record<AppPath, LucideIcon> = {
-  "/": House,
-  "/cuentas": Landmark,
-  "/tarjetas": CreditCard,
-  "/transferencias": ArrowLeftRight,
-  "/pagos": Receipt,
-  "/configuracion": Settings,
-};
-
-function isActive(pathname: string, href: string): boolean {
-  if (href === "/") {
-    return pathname === "/";
-  }
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
+import { isActivePath, NAV_ICONS } from "./nav-icons";
 
 export function BottomNav({ role, hidden }: { role: UserRole; hidden: readonly string[] }) {
   const pathname = usePathname();
@@ -44,8 +20,8 @@ export function BottomNav({ role, hidden }: { role: UserRole; hidden: readonly s
         style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}
       >
         {tabs.map((href) => {
-          const active = isActive(pathname, href);
-          const Icon = ICONS[href];
+          const active = isActivePath(pathname, href);
+          const Icon = NAV_ICONS[href];
           return (
             <li key={href}>
               <Link

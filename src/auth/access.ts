@@ -1,7 +1,7 @@
 import type { UserRole } from "@/domain/schemas";
 import { ROLE_ADMINISTRADOR, ROLE_CUENTAHABIENTE } from "./constants";
 
-export const ADMIN_PATHS = ["/", "/configuracion"] as const;
+export const ADMIN_PATHS = ["/", "/monitoreo", "/configuracion"] as const;
 export const HOLDER_PATHS = [
   "/",
   "/cuentas",
@@ -18,6 +18,7 @@ const LABELS: Record<AppPath, string> = {
   "/tarjetas": "Tarjetas",
   "/transferencias": "Transferencias",
   "/pagos": "Pagos",
+  "/monitoreo": "Monitoring",
   "/configuracion": "Configuración",
 };
 
