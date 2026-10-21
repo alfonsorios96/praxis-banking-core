@@ -27,6 +27,11 @@ export async function readModuleStates(userIds: readonly string[]): Promise<Map<
   return states;
 }
 
+export async function setModuleState(userId: string, state: ModuleState): Promise<void> {
+  await connectDb();
+  await ModuleAccessModel.updateOne({ userId }, { $set: state }, { upsert: true });
+}
+
 export async function setModuleFor(
   userIds: readonly string[],
   key: ModuleKey,

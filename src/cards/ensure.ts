@@ -5,10 +5,10 @@ import { AccountModel } from "@/db/models/account";
 import { CardModel } from "@/db/models/card";
 import { CARD_KINDS, cardExpiry, cardNumber, DAILY_LIMIT_CENTS } from "./mock";
 
-export async function ensureHolderCards(): Promise<void> {
+export async function ensureHolderCards(ownerId?: string): Promise<void> {
   const accounts = await AccountModel.find({
     kind: { $in: [...CARD_KINDS] },
-    ownerId: { $type: "string" },
+    ownerId: ownerId ?? { $type: "string" },
   })
     .select("_id ownerId kind")
     .lean();

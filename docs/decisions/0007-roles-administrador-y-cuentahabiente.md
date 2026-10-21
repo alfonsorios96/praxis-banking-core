@@ -15,7 +15,7 @@ Hay dos roles, y ningún otro sin enmienda:
 - `administrador` — Inicio (paneles de la plataforma) y Configuración.
 - `cuentahabiente` — Inicio, Cuentas, Tarjetas, Transferencias y Pagos.
 
-El usuario `praxis` es administrador. La semilla asegura además tres cuentahabientes (`sofia`, `diego`, `valeria`) si no existen. No hay registro público. El rol viaja en el JWT. Una ruta ajena al rol redirige a Inicio. El rol `user` deja de aceptarse.
+El usuario `praxis` es administrador. La semilla asegura además tres cuentahabientes (`sofia`, `diego`, `valeria`) si no existen. No hay registro público, salvo la entrada como invitado del [ADR 0016](./0016-entrada-como-invitado.md). El rol viaja en el JWT. Una ruta ajena al rol redirige a Inicio. El rol `user` deja de aceptarse.
 
 Configuración persiste el nombre visible de la plataforma. No hay saldos ni movimientos en los paneles: los conteos salen de `users`.
 

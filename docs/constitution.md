@@ -1,8 +1,8 @@
 # Constitución de Praxis
 
-**Versión:** 3.1.0  
+**Versión:** 4.0.0  
 **Ratificada:** 2026-10-09  
-**Enmendada:** 2026-10-21 ([ADR 0015](./decisions/0015-tarjetas-de-debito-simuladas.md))  
+**Enmendada:** 2026-10-21 ([ADR 0016](./decisions/0016-entrada-como-invitado.md))  
 **Alcance:** Toda decisión, especificación, agente y línea de código de este repositorio.
 
 Esta constitución es la norma de mayor rango del proyecto. Ninguna especificación, ADR, prompt de agente ni implementación puede contradecirla. Si hay conflicto, se corrige el artefacto inferior o se enmienda esta constitución mediante una decisión ratificada en `docs/decisions/`.
@@ -78,7 +78,7 @@ La aplicación exige identidad. Hay dos roles, y ningún otro sin enmienda:
 
 El rol permite Tarjetas, Transferencias y Pagos. El administrador puede retirar cada uno de esos módulos a cuentahabientes concretos, y devolverlo, desde Configuración. Ver [ADR 0012](./decisions/0012-modulos-por-persona.md).
 
-Autenticación por **usuario y contraseña**. No hay registro público.
+Autenticación por **usuario y contraseña**. El único registro público es «Entrar como invitado» en `/login`: crea un cuentahabiente de demo con contraseña compartida, Corriente de 500,00 €, Transferencias activo y Tarjetas y Pagos retirados. Ver [ADR 0016](./decisions/0016-entrada-como-invitado.md).
 
 Rutas de producto y APIs de negocio son privadas. Quedan públicas `/login`, el health check y los assets de instalación de la PWA (`/manifest.webmanifest`, `/sw.js` y los iconos). Una ruta ajena al rol redirige a Inicio. Las acciones con efecto sobre saldo siguen requiriendo confirmación del titular (§2.4) **además** de la sesión. Un rol no sustituye esa confirmación.
 
@@ -154,3 +154,4 @@ Sin ADR, no hay enmienda.
 | [0013](./decisions/0013-color-de-tema.md) | Color de tema de la PWA |
 | [0014](./decisions/0014-canary-por-modulos.md) | Canary release con los módulos |
 | [0015](./decisions/0015-tarjetas-de-debito-simuladas.md) | Tarjetas de débito simuladas |
+| [0016](./decisions/0016-entrada-como-invitado.md) | Entrada como invitado |

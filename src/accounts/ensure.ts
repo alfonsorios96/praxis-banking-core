@@ -9,7 +9,12 @@ import { User } from "@/db/models/user";
 import { CURRENCY } from "@/domain/schemas";
 import { spanishIban } from "@/domain/iban";
 import { writeBalancedEntry } from "@/ledger/write";
-import { ACCOUNT_KIND_LABEL, OPENING_CENTS, openingIdempotencyKey } from "./opening";
+import {
+  ACCOUNT_KIND_LABEL,
+  OPENING_CENTS,
+  type OpeningCents,
+  openingIdempotencyKey,
+} from "./opening";
 
 const HOLDER_KINDS = ["checking", "savings"] as const;
 
@@ -19,25 +24,39 @@ export async function ensureHolderAccounts(): Promise<void> {
   const holders = await User.find({ role: ROLE_CUENTAHABIENTE }).select("_id");
 
   for (const holder of holders) {
-    const ownerId = String(holder._id);
-    for (const kind of HOLDER_KINDS) {
-      const accountId = await ensureCustomerAccount(ownerId, kind);
-      await writeBalancedEntry({
-        idempotencyKey: openingIdempotencyKey(accountId),
-        postings: [
-          {
-            accountId: treasuryId,
-            side: "debit",
-            money: { currency: CURRENCY, amountMinor: OPENING_CENTS[kind] },
-          },
-          {
-            accountId,
-            side: "credit",
-            money: { currency: CURRENCY, amountMinor: OPENING_CENTS[kind] },
-          },
-        ],
-      });
-    }
+    await openAccounts(String(holder._id), treasuryId);
+  }
+}
+
+export async function openHolderAccounts(
+  ownerId: string,
+  openingCents: OpeningCents = OPENING_CENTS,
+): Promise<void> {
+  await openAccounts(ownerId, await ensureTreasury(), openingCents);
+}
+
+async function openAccounts(
+  ownerId: string,
+  treasuryId: string,
+  openingCents: OpeningCents = OPENING_CENTS,
+): Promise<void> {
+  for (const kind of HOLDER_KINDS) {
+    const accountId = await ensureCustomerAccount(ownerId, kind);
+    await writeBalancedEntry({
+      idempotencyKey: openingIdempotencyKey(accountId),
+      postings: [
+        {
+          accountId: treasuryId,
+          side: "debit",
+          money: { currency: CURRENCY, amountMinor: openingCents[kind] },
+        },
+        {
+          accountId,
+          side: "credit",
+          money: { currency: CURRENCY, amountMinor: openingCents[kind] },
+        },
+      ],
+    });
   }
 }
 

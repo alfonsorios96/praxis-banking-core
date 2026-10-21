@@ -16,7 +16,7 @@ El shell necesita identidad antes de que existan cuentas o movimientos. La persi
 - La única colección de esta versión es `users`.
 - Un rol: `user`. Contraseña con **bcryptjs**. Sesión **JWT HS256** (`jose`) en cookie HttpOnly `praxis_session`, 7 días, `SameSite=Lax`, `Secure` en producción.
 - `SESSION_SECRET` tiene al menos 32 caracteres.
-- No hay registro público. Si `users` está vacía y existen `AUTH_SEED_USERNAME` y `AUTH_SEED_PASSWORD`, se crea ese usuario al conectar.
+- No hay registro público, salvo la entrada como invitado del [ADR 0016](./0016-entrada-como-invitado.md). Si `users` está vacía y existen `AUTH_SEED_USERNAME` y `AUTH_SEED_PASSWORD`, se crea ese usuario al conectar.
 - Rutas públicas: `/login`, `/api/health`, `/manifest.webmanifest` y `/sw.js`. El resto redirige a `/login` si no hay sesión. Un usuario ya autenticado que visita `/login` vuelve a `/`.
 
 ## Consecuencias
